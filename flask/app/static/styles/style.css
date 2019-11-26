@@ -1,0 +1,60 @@
+@import url("header.css");
+@import url("footer.css");
+@import url("mediaq.css");
+* {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.main-content {
+    margin: 0 5%;
+}
+
+.description {
+    background-image: url("../img/background_im.png");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+body {
+    margin: 0;
+}
+
+aside {
+    background: #f0f0f0;
+    padding: 10px;
+    width: 200px;
+    float: right;
+    margin-top: 60px;
+}
+
+h2 {
+    padding: 20px;
+    margin-top: 50px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+}
+
+td,
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+#res {
+    padding-bottom: 50px;
+    text-align: left;
+}
+
+figure figcaption {
+    text-align: left;
+}

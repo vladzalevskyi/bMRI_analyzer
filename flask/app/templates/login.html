@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Brain MRI Analyzer</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/login_style.css')}}">
+    <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}">
+
+</head>
+
+<body>
+    <article class='description'>
+        <header>
+
+            <div class='navbar'>
+                <nav>
+                    <a href="" id="logoimage">
+                        <img src="{{url_for('static', filename='images/icon.png')}}" alt="icon">
+                    </a>
+                    <a href="/">About</a>
+                    <a href="/">Examples</a>
+                    <a href="/contact_us">Contact Us</a>
+
+                    <div id="login"><a href="/login">Log In</a></div>
+
+                </nav>
+
+            </div>
+
+        </header>
+
+        <div>
+            <h2>Login Form</h2>
+        </div>
+
+        <form action="url/to/go" method="post">
+            <div class="imgcontainer">
+                <img src="{{url_for('static', filename='images/login_icon.png')}}" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="container">
+                <label for="uname"><b>Username</b>
+          <input type="text" placeholder="Enter Username" id="uname" required>
+        </label>
+                <label for="psw"><b>Password</b>
+          <input type="password" placeholder="Enter Password" id="psw" required>
+        </label>
+
+                <div class="submit-field">
+                    <button type="submit">Login</button>
+                    <div class="forget-passw"><a href="*">Forgot password?</a></div>
+                </div>
+
+                <div class="checkmark">
+                    <label class="container">
+            <input type="checkbox" name="remember">Remember me
+          </label>
+                </div>
+
+                <footer>
+                    <span class="footer-text">
+            <time datetime="2019-10-04 20:00">Created by: Vladyslav Zalevskyi.</time> Contact information: <a
+                href="mailto:vzalevskyi24@gmail.com">
+                vzalevskyi24@gmail.com</a>
+          </span>
+                </footer>
+
+    </article>
+</body>
+
+</html>
