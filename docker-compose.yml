@@ -8,6 +8,7 @@ services:
     
     environment:
       - APP_NAME=bMRI_analyzer
+      
     expose:
       - 8080
 

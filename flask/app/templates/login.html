@@ -36,37 +36,51 @@
             <h2>Login Form</h2>
         </div>
 
-        <form action="url/to/go" method="post">
+
+
+        <form action="/login" method="post">
             <div class="imgcontainer">
                 <img src="{{url_for('static', filename='images/login_icon.png')}}" alt="Avatar" class="avatar">
             </div>
 
-            <div class="container">
-                <label for="uname"><b>Username</b>
-          <input type="text" placeholder="Enter Username" id="uname" required>
-        </label>
-                <label for="psw"><b>Password</b>
-          <input type="password" placeholder="Enter Password" id="psw" required>
-        </label>
+            <div class="container">{{ form.username.label }} {{ form.username }} {% if form.username.errors %}
+                <ul class="errors">
+                    {% for error in form.username.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}</div>
+            <div class="container">{{ form.password.label }} {{ form.password }} {% if form.password.errors %}
+                <ul class="errors">
+                    {% for error in form.password.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}</div>
+            {{ form.csrf_token }} {{ form.submit }}
 
-                <div class="submit-field">
-                    <button type="submit">Login</button>
-                    <div class="forget-passw"><a href="*">Forgot password?</a></div>
-                </div>
+        </form>
 
-                <div class="checkmark">
-                    <label class="container">
+
+        <div class="forget-passw"><a href="/sign_up">Sign Up</a></div>
+        </div>
+
+        <div class="forget-passw"><a href="*">Forgot password?</a></div>
+        </div>
+
+        <div class="checkmark">
+            <label class="container">
             <input type="checkbox" name="remember">Remember me
           </label>
-                </div>
+        </div>
 
-                <footer>
-                    <span class="footer-text">
+        <footer>
+            <span class="footer-text">
             <time datetime="2019-10-04 20:00">Created by: Vladyslav Zalevskyi.</time> Contact information: <a
                 href="mailto:vzalevskyi24@gmail.com">
                 vzalevskyi24@gmail.com</a>
           </span>
-                </footer>
+        </footer>
 
     </article>
 </body>
