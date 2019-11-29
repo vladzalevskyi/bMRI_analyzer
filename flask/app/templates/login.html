@@ -24,7 +24,11 @@
                     <a href="/">Examples</a>
                     <a href="/contact_us">Contact Us</a>
 
-                    <div id="login"><a href="/login">Log In</a></div>
+                    <div id="login">
+                        <a href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
+                        <a href="{{ url_for('login') }}">Login</a> {% else %}
+                        <a href="{{ url_for('logout') }}">Logout</a> {% endif %}
+                    </div>
 
                 </nav>
 
@@ -57,21 +61,44 @@
                     {% endfor %}
                 </ul>
                 {% endif %}</div>
-            {{ form.csrf_token }} {{ form.submit }}
+
+
+
+
+
+
+            {% with messages = get_flashed_messages() %} {% if messages %}
+            <ul class=flashes>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endwith %} {{ form.csrf_token }} {{ form.submit }}
 
         </form>
 
 
+
+
+
+
+
+        <div class="container">{{form.remember_me.label}} {{form.remember_me}} {% if form.remember_me.errors %}
+            <ul class="errors">
+                {% for error in form.remember_me.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
+
+
+
+
+        </ul>
         <div class="forget-passw"><a href="/sign_up">Sign Up</a></div>
         </div>
 
         <div class="forget-passw"><a href="*">Forgot password?</a></div>
-        </div>
-
-        <div class="checkmark">
-            <label class="container">
-            <input type="checkbox" name="remember">Remember me
-          </label>
         </div>
 
         <footer>

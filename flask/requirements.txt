@@ -8,4 +8,6 @@ Werkzeug==0.16.0
 uwsgi
 flask-wtf
 Flask-SQLAlchemy
+SQLAlchemy
+flask-login
 mysqlclient

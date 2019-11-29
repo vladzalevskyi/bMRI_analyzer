@@ -56,7 +56,13 @@
             {% endif %}</div>
 
 
-
+        <div class="container">{{ form.password2.label }} {{ form.password2 }} {% if form.password2.errors %}
+            <ul class="errors">
+                {% for error in form.password2.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
 
 
         {{ form.csrf_token }} {{ form.submit }}
