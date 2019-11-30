@@ -8,7 +8,7 @@ from flask import render_template, redirect, url_for, request, flash
 
 
 from app import app
-from app.forms import LoginForm, SignUpForm
+from app.forms import LoginForm, SignUpForm, AddPatientForm
 from app.auth import login_manager, load_user, logout_user, login_required, login_user, current_user
 
 from app.db_classes import db, Therapists, Patients, Images, ImageAnalysis, ImageTypes, TumorTypes
@@ -101,6 +101,24 @@ def sign_up():
     
     return render_template("sign_up.html", form=form)
 
+
+@app.route("/add_patient", methods=('GET', "POST"))
+def add_patient():
+    available_therapists_id, available_therapists_names = [t.id for t in Therapists.query.all()], [t.first_name + " " + t.last_name for t in Therapists.query.all()]
+    
+    form = AddPatientForm()
+    form.therapist_id.choices = list(zip(available_therapists_id, available_therapists_names))
+
+    if form.validate_on_submit():
+        p = Patients.query.first()
+        patient = Patients(first_name=form.fname.data, last_name=form.lname.data, gender=form.gender.data, ssn=form.ssn.data, age=form.age.data, therapist_id=form.therapist_id.data)
+        db.session.add(patient)
+        db.session.commit()
+        flash("New patient successfully added")
+
+        return render_template("add_patient.html", form=form)
+    return render_template("add_patient.html", form=form)
+    #return render_template("add_patient.html", form=form)
 
 
 
