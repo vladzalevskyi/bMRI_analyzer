@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm as Form
 
-from wtforms import PasswordField, StringField, SubmitField, BooleanField, SelectField, IntegerField
+from wtforms import PasswordField, StringField, SubmitField, BooleanField, SelectField, IntegerField, FileField, DateTimeField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, NumberRange, InputRequired
+from flask_wtf.file import FileAllowed, FileRequired
 from app.db_classes import Therapists, Patients
+from  datetime import datetime
 class LoginForm(Form):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=19)])
     password = PasswordField('Password', validators=[DataRequired(), Length(max=19)])
@@ -36,10 +38,19 @@ class AddPatientForm(Form):
 
     submit = SubmitField('Submit')
 
-    # When you add any methods that match the pattern validate_<field_name>, 
-    # WTForms takes those as custom validators 
+    # When you add any methods that match the pattern validate_<field_name>,
+    # WTForms takes those as custom validators
     # and invokes them in addition to the stock validators.
     def validate_ssn(self, ssn):
         user = Patients.query.filter_by(ssn=ssn.data).first()
         if user is not None:
             raise ValidationError('Patient with current ssn already exists')
+
+
+class ImageForm(Form):
+    photo = FileField(label="Select image", validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    patient_id = SelectField(u'Select patient', coerce=int, validators=[InputRequired()])
+    datetime = DateTimeField("Select datetime of uplodaded image. Default in now()", default=datetime.today)
+    im_type = SelectField(u'Select image type', coerce=int, validators=[InputRequired()])
+    analyze = BooleanField("Send to analysis module")
+    submit = SubmitField('Upload')

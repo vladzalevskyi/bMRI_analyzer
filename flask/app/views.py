@@ -1,18 +1,27 @@
 import os
 from ast import literal_eval
 from datetime import datetime
+import requests
+import json
 
 from sqlalchemy import func
 from flask_login import current_user, login_user, logout_user
 from flask import render_template, redirect, url_for, request, flash
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 
 
 from app import app
-from app.forms import LoginForm, SignUpForm, AddPatientForm
+from app.forms import LoginForm, SignUpForm, AddPatientForm, ImageForm
 from app.auth import login_manager, load_user, logout_user, login_required, login_user, current_user
 
 from app.db_classes import db, Therapists, Patients, Images, ImageAnalysis, ImageTypes, TumorTypes
 
+photos = UploadSet('photos', IMAGES)
+configure_uploads(app, photos)
+patch_request_class(app)  # set maximum file size, default is 16MB
+
+
+ML_URL = 'http://0.0.0.0:5002/api/detect'
 
 @app.route("/")
 def index():
@@ -31,16 +40,8 @@ def login():
     #for both POST and valid requests of our form
     if form.validate_on_submit():
         #               **TO DO**
-        #make request to db and if valid data
-        #should redirect for a loged_in page
-        #else to the same page but show error
         #use jinja templete and pass a flag, if true
         #display error
-        
-        #checks if given to form data is in db; return list of found items
-        #[]==None
-
-        # check for username validity == unique field
 
         user = Therapists.query.filter_by(username=form.username.data).first()
 
@@ -110,7 +111,7 @@ def add_patient():
     form.therapist_id.choices = list(zip(available_therapists_id, available_therapists_names))
 
     if form.validate_on_submit():
-        p = Patients.query.first()
+        #p = Patients.query.first()
         patient = Patients(first_name=form.fname.data, last_name=form.lname.data, gender=form.gender.data, ssn=form.ssn.data, age=form.age.data, therapist_id=form.therapist_id.data)
         db.session.add(patient)
         db.session.commit()
@@ -121,12 +122,42 @@ def add_patient():
     #return render_template("add_patient.html", form=form)
 
 
+@app.route("/upload_image",  methods=('GET', "POST"))
+def upload_image():
 
+    pid,pnames = [t.pid for t in Patients.query.all()], [str(t.first_name) + " " + str(t.last_name) for t in Patients.query.all()]
+    imtypes_id,imtype_names = [t.id for t in ImageTypes.query.all()], [t.name for t in ImageTypes.query.all()]
 
-"""
+    form = ImageForm()
+    form.patient_id.choices = list(zip(pid, pnames))
+    form.im_type.choices = list(zip(imtypes_id, imtype_names))
 
-@app.route("/test")
-def test():
-    print(Therapists.query.all())
-    return str(Therapists.query.first())
-"""
+    if form.validate_on_submit():
+        filename = photos.save(form.photo.data, name=f"{form.patient_id.data}_{form.datetime.data}_{current_user.id}.")
+        file_url = photos.url(filename)
+
+        img = Images(patient_id=form.patient_id.data, datetime=form.datetime.data, im_type=form.im_type.data, image=filename)
+        db.session.add(img)
+        db.session.commit()
+        flash("New image successfully added")
+        if form.analyze.data:
+            #send POST request to ml module
+            res = requests.post(ML_URL, json={'impath':filename})
+
+            if res.status_code == 200:
+
+                result = json.loads(res.text)
+                diagnosis = 1 if result["tumor_detected"]==False else 2
+                img_anal = ImageAnalysis(image_id=img.image_id, segment=result["segmentation_img"], tumor=result["classification"], diagnosis=diagnosis, recommendations=None, confidence=result["confidence"], dt=datetime.now(), verified=False)
+                
+                db.session.add(img_anal)
+                db.session.commit()
+                
+                #flash(img_anal)
+                flash("Successfully analyzed new image")
+            else:
+                flash("Error when analyzing")
+
+    else:
+        file_url = None
+    return render_template("upload_image.html", form=form, file_url=file_url)

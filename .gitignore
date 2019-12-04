@@ -104,4 +104,8 @@ venv.bak/
 .mypy_cache/
 
 #ml models with weight
-ml_models
+analyzed/
+uploads/
+__data
+__brain-tumor
+Mask_RCNN
