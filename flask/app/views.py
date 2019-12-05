@@ -4,7 +4,8 @@ from datetime import datetime
 import requests
 import json
 
-from sqlalchemy import func
+from sqlalchemy import func, desc, asc
+from sqlalchemy.orm import load_only
 from flask_login import current_user, login_user, logout_user
 from flask import render_template, redirect, url_for, request, flash
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
@@ -16,12 +17,16 @@ from app.auth import login_manager, load_user, logout_user, login_required, logi
 
 from app.db_classes import db, Therapists, Patients, Images, ImageAnalysis, ImageTypes, TumorTypes
 
+from app.tables import PatientsTable, Col, ImagesTable
+
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)  # set maximum file size, default is 16MB
 
 
 ML_URL = 'http://0.0.0.0:5002/api/detect'
+ITEMS_PER_PAGE = 5
+
 
 @app.route("/")
 def index():
@@ -161,3 +166,53 @@ def upload_image():
     else:
         file_url = None
     return render_template("upload_image.html", form=form, file_url=file_url)
+
+
+@app.route("/patients",  methods=('GET', "POST"))
+def patients():
+    sort = request.args.get('sort', 'id')
+    reverse = (request.args.get('direction', 'asc') == 'desc')
+    
+    if reverse:
+        p = Patients.query.order_by(getattr(Patients, sort).asc()).all()
+    else:
+        p = Patients.query.order_by(getattr(Patients, sort).desc()).all()
+    
+
+    ptable = PatientsTable(p,
+                          sort_by=sort,
+                          sort_reverse=reverse)
+    
+    #   ptable = PatientsTable(items=p)
+    
+    return ptable.__html__()
+
+
+@app.route("/images",  methods=('GET', "POST"))
+def images():
+    sort = request.args.get('sort', 'image_id')
+    reverse = (request.args.get('direction', 'asc') == 'desc')
+    image_url = photos.url(request.args.get("image_url", ""))
+    page = request.args.get('page', 1, type=int)
+    #add image view
+
+    if reverse:
+        iquery = Images.query.order_by(getattr(Images, sort).asc()).paginate(page, ITEMS_PER_PAGE, False)
+        i = iquery.items
+    else:
+        iquery = Images.query.order_by(getattr(Images, sort).desc()).paginate(page, ITEMS_PER_PAGE, False)
+        i = iquery.items
+    
+
+    next_url = url_for('images', page=iquery.next_num) if iquery.has_next else None
+    prev_url = url_for('images', page=iquery.prev_num) if iquery.has_prev else None
+
+
+
+    itable = ImagesTable(i,
+                          sort_by=sort,
+                          sort_reverse=reverse)
+    
+    #   ptable = PatientsTable(items=p)
+    
+    return render_template("images.html", table=itable, simage=image_url, next_url=next_url, prev_url=prev_url)
