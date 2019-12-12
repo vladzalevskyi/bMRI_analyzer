@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import column_property
 
 from app import app
 
@@ -39,6 +40,8 @@ class Therapists(UserMixin, db.Model):
 
 class Patients(db.Model):
     __table__ = db.Model.metadata.tables["coursework_db.patient_info"]
+    
+    fullname = column_property(__table__.columns.first_name + " " + __table__.columns.last_name)
 
     def __str__(self):
         return str({"pid": self.pid, "last_name": self.last_name, "first_name": self.first_name, "ssn": self.ssn, "gender": self.gender, "age": self.age, "therapist_id": self.therapist_id})

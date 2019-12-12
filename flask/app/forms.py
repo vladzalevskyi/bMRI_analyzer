@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm as Form
 
-from wtforms import PasswordField, StringField, SubmitField, BooleanField, SelectField, IntegerField, FileField, DateTimeField
+from wtforms import PasswordField, StringField, SubmitField, BooleanField, SelectField, IntegerField, FileField, DateTimeField, HiddenField, FloatField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, NumberRange, InputRequired
 from flask_wtf.file import FileAllowed, FileRequired
 from app.db_classes import Therapists, Patients
@@ -54,3 +54,21 @@ class ImageForm(Form):
     im_type = SelectField(u'Select image type', coerce=int, validators=[InputRequired()])
     analyze = BooleanField("Send to analysis module")
     submit = SubmitField('Upload')
+
+
+class PatientsForm(Form):
+    # add validaion fields to be careful
+    # quering data and puting it to url
+    search_field = StringField('Search', render_kw={"placeholder": "'Name Surname' OR SSN ('123456789')"})
+    sort_by_ssn = BooleanField("Search using ssn", default=False)
+    submit = SubmitField('Search')
+
+class EditImgAnalysisForm(Form):
+    img_id = HiddenField("Image id")
+    tumor = StringField("Tumor analysis:")
+    diagnosis = StringField("Diagnosis:")
+    recommendations = StringField("Recommendations")
+    confidence = FloatField("Confidence")
+    verified = BooleanField("Verified", default=True)
+
+    submit = SubmitField('Save changes')

@@ -23,6 +23,9 @@
         <a href="{{ url_for('login') }}">Login</a> {% else %}
         <a href="{{ url_for('logout') }}">Logout</a>
         <a href="{{ url_for('upload_image') }}">Upload Image</a>
+        <a href="{{ url_for('patients') }}">My Patients</a>
+        <a href="{{ url_for('images') }}">Images</a>
+        <a href="{{ url_for('image_analysis') }}">Verify Images</a>
         <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
     </div>
 </body>

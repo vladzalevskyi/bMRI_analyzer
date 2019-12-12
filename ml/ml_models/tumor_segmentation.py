@@ -257,7 +257,7 @@ class Segmentation_Model:
     
         mask = np.reshape(r['masks'], (1024, 1024))
         y1, x1, y2, x2 = r['rois'][0]
-        p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=1,
+        p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=4,
                               alpha=0.3, linestyle="dashed",
                               edgecolor='r', facecolor='none')
         fig = plt.figure()

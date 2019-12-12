@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 import json
 
+from sqlalchemy.sql.functions import concat
 from sqlalchemy import func, desc, asc
 from sqlalchemy.orm import load_only
 from flask_login import current_user, login_user, logout_user
@@ -12,12 +13,12 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_cl
 
 
 from app import app
-from app.forms import LoginForm, SignUpForm, AddPatientForm, ImageForm
+from app.forms import LoginForm, SignUpForm, AddPatientForm, ImageForm, PatientsForm, EditImgAnalysisForm
 from app.auth import login_manager, load_user, logout_user, login_required, login_user, current_user
 
 from app.db_classes import db, Therapists, Patients, Images, ImageAnalysis, ImageTypes, TumorTypes
 
-from app.tables import PatientsTable, Col, ImagesTable
+from app.tables import PatientsTable, Col, ImagesTable, ImageAnalysisTable
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
@@ -170,13 +171,31 @@ def upload_image():
 
 @app.route("/patients",  methods=('GET', "POST"))
 def patients():
-    sort = request.args.get('sort', 'id')
+
+    form = PatientsForm()
+    sort = request.args.get('sort', 'therapist_id')
     reverse = (request.args.get('direction', 'asc') == 'desc')
+
+
+    delete_id = request.args.get("delete_id", "")
+    if request.method == "POST" and delete_id != "":
+        Patients.query.filter_by(pid=delete_id).delete()
+        db.session.commit()
+        flash(f"Deleted patient with id {delete_id}")
+
+    available_patients = Patients.query.filter_by(therapist_id=current_user.id)
     
+
+    if (request.method == "POST" and form.search_field.data != None and len(form.search_field.data)>0):
+        if not form.sort_by_ssn.data:
+            available_patients = available_patients.filter((Patients.fullname.startswith(form.search_field.data)))
+        else:
+            available_patients = available_patients.filter((Patients.ssn.startswith(form.search_field.data)))
+
     if reverse:
-        p = Patients.query.order_by(getattr(Patients, sort).asc()).all()
+        p = available_patients.order_by(getattr(Patients, sort).asc()).all()
     else:
-        p = Patients.query.order_by(getattr(Patients, sort).desc()).all()
+        p = available_patients.order_by(getattr(Patients, sort).desc()).all()
     
 
     ptable = PatientsTable(p,
@@ -184,17 +203,67 @@ def patients():
                           sort_reverse=reverse)
     
     #   ptable = PatientsTable(items=p)
-    
-    return ptable.__html__()
+
+    return render_template("patients.html", table=ptable, form=form)
 
 
 @app.route("/images",  methods=('GET', "POST"))
 def images():
     sort = request.args.get('sort', 'image_id')
+    direction = request.args.get('direction', 'asc')
     reverse = (request.args.get('direction', 'asc') == 'desc')
+    image_id = request.args.get('image_url', "")
+
+
+    #ignore the error when no image selected
     image_url = photos.url(request.args.get("image_url", ""))
     page = request.args.get('page', 1, type=int)
     #add image view
+
+
+    delete_id = request.args.get("delete_id", "")
+    if request.method == "POST" and delete_id != "":
+        Images.query.filter_by(image_id=delete_id).delete()
+        db.session.commit()
+        flash(f"Deleted patient with id {delete_id}")
+
+
+    re_analyze_id = request.args.get("analyze_id", "")
+    if request.method == "POST" and re_analyze_id != "":
+
+        res = requests.post(ML_URL, json={'impath':Images.query.filter_by(image_id=re_analyze_id).first().image})
+
+        if res.status_code == 200:
+
+            result = json.loads(res.text)
+            diagnosis = 1 if result["tumor_detected"]==False else 2
+            
+            current_analysis = ImageAnalysis.query.filter_by(image_id=re_analyze_id).first()
+            if current_analysis is None:
+
+                img_anal = ImageAnalysis(image_id=re_analyze_id, segment=result["segmentation_img"], tumor=result["classification"], diagnosis=diagnosis, recommendations=None, confidence=result["confidence"], dt=datetime.now(), verified=False)
+                
+                db.session.add(img_anal)
+                db.session.commit()
+
+                flash(f"Analyzed image with id {re_analyze_id}")
+            else:
+                current_analysis.segment = result["segmentation_img"]
+                current_analysis.tumor = result["classification"]
+                current_analysis.diagnosis = diagnosis
+                current_analysis.recommendations = None
+                current_analysis.dt = datetime.now()
+                current_analysis.confidence = result["confidence"]
+                current_analysis.verified = False
+
+                db.session.commit()
+                
+                flash(f"Re-analyzed image with id {re_analyze_id}")
+
+                
+        else:
+            flash(f"Error {res.status_code}")
+
 
     if reverse:
         iquery = Images.query.order_by(getattr(Images, sort).asc()).paginate(page, ITEMS_PER_PAGE, False)
@@ -204,9 +273,12 @@ def images():
         i = iquery.items
     
 
-    next_url = url_for('images', page=iquery.next_num) if iquery.has_next else None
-    prev_url = url_for('images', page=iquery.prev_num) if iquery.has_prev else None
+    next_url = url_for('images', page=iquery.next_num, direction=direction, sort=sort) if iquery.has_next else None
+    prev_url = url_for('images', page=iquery.prev_num, direction=direction, sort=sort) if iquery.has_prev else None
 
+
+    if image_id != "":
+        i = Images.query.filter_by(image_id=image_id)
 
 
     itable = ImagesTable(i,
@@ -216,3 +288,69 @@ def images():
     #   ptable = PatientsTable(items=p)
     
     return render_template("images.html", table=itable, simage=image_url, next_url=next_url, prev_url=prev_url)
+
+@app.route("/image_analysis",  methods=('GET', "POST"))
+def image_analysis():
+
+    sort = request.args.get('sort', 'image_id')
+    direction = request.args.get('direction', 'asc')
+    reverse = (request.args.get('direction', 'asc') == 'desc')
+
+
+    #ignore the error when no image selected
+    image_url = photos.url(request.args.get("image_url", ""))
+    page = request.args.get('page', 1, type=int)
+    #add image view
+
+
+    delete_id = request.args.get("delete_id", "")
+    if request.method == "POST" and delete_id != "":
+        ImageAnalysis.query.filter_by(image_id=delete_id).delete()
+        db.session.commit()
+        flash(f"Deleted patient with id {delete_id}")
+
+
+    if reverse:
+        iquery = ImageAnalysis.query.order_by(getattr(ImageAnalysis, sort).asc()).paginate(page, ITEMS_PER_PAGE, False)
+        i = iquery.items
+    else:
+        iquery = ImageAnalysis.query.order_by(getattr(ImageAnalysis, sort).desc()).paginate(page, ITEMS_PER_PAGE, False)
+        i = iquery.items
+    
+
+    next_url = url_for('image_analysis', page=iquery.next_num, direction=direction, sort=sort) if iquery.has_next else None
+    prev_url = url_for('image_analysis', page=iquery.prev_num, direction=direction, sort=sort) if iquery.has_prev else None
+
+
+
+    itable = ImageAnalysisTable(i,
+                          sort_by=sort,
+                          sort_reverse=reverse)
+    
+    #   ptable = PatientsTable(items=p)
+    print(image_url)
+    return render_template("image_analysis.html", table=itable, simage=image_url, next_url=next_url, prev_url=prev_url)
+
+@app.route("/edit_analysis",  methods=["POST"])
+def edit_analysis():
+    img_id = request.args.get("image_url", "")
+
+    if img_id == "":
+        img_id = request.form["img_id"]
+
+    img_analysis = ImageAnalysis.query.filter_by(image_id=img_id).first()
+    
+    form = EditImgAnalysisForm(img_id=img_id, tumor=img_analysis.tumor, diagnosis=img_analysis.diagnosis, recommendations=img_analysis.recommendations, confidence=img_analysis.confidence, verified=img_analysis.verified)
+    #form.tumor.default = img_analysis.tumor
+    if form.validate_on_submit():
+        #return str(form.data)
+        img_analysis.tumor = form.data["tumor"]
+        img_analysis.diagnosis = form.data["diagnosis"]
+        img_analysis.recommendations = form.data["recommendations"]
+        img_analysis.confidence = form.data["confidence"]
+        img_analysis.verified = form.data["verified"]
+        img_analysis.datetime = datetime.now()
+
+        db.session.commit()
+        return redirect(url_for('image_analysis'))
+    return render_template("edit_analysis.html", form=form, img_id=img_id)

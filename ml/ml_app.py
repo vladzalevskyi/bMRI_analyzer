@@ -55,20 +55,23 @@ def predict():
         result = {"classification": str(prediction)}
 
         img = Segmentation_Model.load_image(impath)
-        segmentation_img = os.path.join(os.path.abspath("../analyzed"), r["impath"])
+        segmentation_img = os.path.join(os.path.abspath("../uploads"), "analyzed_" + r["impath"])
 
         # still plots the resulting image
         # and can't finish the process without closing it
         segm = segm_model.predict_image_(img, save=True, plot=False, save_path=segmentation_img)
 
         if segm["tumor_detected"] == False:
-            result["segmentation_img"] = impath
+            result["segmentation_img"] = impath.split("/")[-1]
             result["tumor_detected"] = False
             result["confidence"] = float(prediction[0])
+            print(segmentation_img.split("/")[-1], "*"*500)
+
         else:
             result["tumor_detected"] = True
             result["confidence"] = float(prediction[0])
-            result["segmentation_img"] = segmentation_img
+            result["segmentation_img"] = segmentation_img.split("/")[-1]
+            print(segmentation_img.split("/")[-1], "*"*500)
 
         result["segmentation"] = str(segm["rois"])
 

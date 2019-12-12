@@ -4,24 +4,22 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Images</title>
+    <title>Image Verification</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
 </head>
 
 <body>
+
+    <h1>View image analysis and verify results</h1>
     {% with messages = get_flashed_messages() %} {% if messages %}
     <ul class=flashes>
         {% for message in messages %}
         <li>{{ message }}</li>
         {% endfor %}
     </ul>
-    {% endif %} {% endwith %}
-    <div align="left">{{table}}</div> {% if simage %}
+    {% endif %} {% endwith %} {{table}} {% if simage %}
 
-    <div align="right"><img src="{{ simage }}" align="right"></div> {% endif %} {% if prev_url %}
-    <a href="{{ prev_url }}">Previous Page</a> {% endif %} {% if next_url %}
-    <a href="{{ next_url }}">Next Page</a> {% endif %}
-
+    <div align="right"><img src="{{ simage }}" align="right"></div> {% endif %}
 
     <div>
         Naviagtion:
@@ -35,6 +33,5 @@
         <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
     </div>
 </body>
-
 
 </html>

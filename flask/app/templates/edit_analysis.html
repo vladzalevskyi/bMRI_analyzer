@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Edit Image Analysis</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+</head>
+
+<body>
+
+    <h2>You are editing image with image_id={{img_id}}. Current values are displayed in the fields below. To change them, edit the fields and press 'Save changes'</h2>
+
+    <form action="/edit_analysis" method="post" data-img_id={{img_id}}>
+        {{form.img_id}}
+
+        <div class="container">{{ form.tumor.label }} {{ form.tumor }} {% if form.tumor.errors %}
+            <ul class="errors">
+                {% for error in form.tumor.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
+
+        <div class="container">{{ form.diagnosis.label }} {{ form.diagnosis }} {% if form.diagnosis.errors %}
+            <ul class="errors">
+                {% for error in form.diagnosis.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
+        <div class="container">{{ form.recommendations.label }} {{ form.recommendations }} {% if form.recommendations.errors %}
+            <ul class="errors">
+                {% for error in form.recommendations.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
+        <div class="container">{{ form.confidence.label }} {{ form.confidence }} {% if form.confidence.errors %}
+            <ul class="errors">
+                {% for error in form.confidence.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
+        <div class="container">{{ form.verified.label }} {{ form.verified }} {% if form.verified.errors %}
+            <ul class="errors">
+                {% for error in form.verified.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
+
+
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %} {% endwith %} {{ form.csrf_token }} {{ form.submit }}
+    </form>
+
+</body>
+
+</html>

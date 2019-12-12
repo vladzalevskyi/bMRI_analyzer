@@ -4,23 +4,19 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Images</title>
+    <title>Patients</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+
 </head>
 
 <body>
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} {% endwith %}
-    <div align="left">{{table}}</div> {% if simage %}
+    <form action="/patients" method="post">
 
-    <div align="right"><img src="{{ simage }}" align="right"></div> {% endif %} {% if prev_url %}
-    <a href="{{ prev_url }}">Previous Page</a> {% endif %} {% if next_url %}
-    <a href="{{ next_url }}">Next Page</a> {% endif %}
+        {{form.search_field.label}} {{form.search_field}} {{form.sort_by_ssn.label}} {{form.sort_by_ssn}} {{ form.csrf_token }} {{ form.submit }}
+
+    </form>
+
+    {{table}}
 
 
     <div>
@@ -35,6 +31,5 @@
         <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
     </div>
 </body>
-
 
 </html>
