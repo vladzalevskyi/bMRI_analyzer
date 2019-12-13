@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 import json
 
-from sqlalchemy.sql.functions import concat
+from sqlalchemy.sql.functions import concat, count
 from sqlalchemy import func, desc, asc
 from sqlalchemy.orm import load_only
 from flask_login import current_user, login_user, logout_user
@@ -43,11 +43,7 @@ def login():
 
     form = LoginForm()
 
-    #for both POST and valid requests of our form
     if form.validate_on_submit():
-        #               **TO DO**
-        #use jinja templete and pass a flag, if true
-        #display error
 
         user = Therapists.query.filter_by(username=form.username.data).first()
 
@@ -76,12 +72,24 @@ def contact_us():
 def home():
     if not current_user.is_authenticated:
         user = literal_eval(request.args['user'])
-    img_to_review = Images.query.join(ImageAnalysis, Images.image_id==ImageAnalysis.image_id).filter_by(verified=False).all()#.add_columns(users.userId, users.name, users.email, friends.userId, friendId).filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
-    #img_to_review = db.engine.execute("SELECT * FROM images").fetchall()
-    img_today = Images.query.filter(func.DATE(Images.datetime)==datetime.today().date()).all()
-    img_analyzed = ImageAnalysis.query.filter(func.DATE(ImageAnalysis.dt)==datetime.today().date()).all()
-    return render_template("home.html", user=current_user, img_to_review=len(img_to_review), img_today=len(img_today), img_analyzed=len(img_analyzed))
 
+    
+    patient_count = Patients.query.filter_by(therapist_id=current_user.id).count()
+    img_to_review = Images.query.join(Patients, Images.patient_id == Patients.pid).join(Therapists, Patients.therapist_id == Therapists.id).filter_by(id=current_user.id).join(ImageAnalysis, Images.image_id==ImageAnalysis.image_id).filter_by(verified=False).count()
+    img_today = Images.query.join(Patients, Images.patient_id == Patients.pid).join(Therapists, Patients.therapist_id == Therapists.id).filter(func.DATE(Images.datetime)==datetime.today().date()).count()
+    img_analyzed = Images.query.join(Patients, Images.patient_id == Patients.pid).join(Therapists, Patients.therapist_id == Therapists.id).join(ImageAnalysis, ImageAnalysis.image_id==Images.image_id).filter(func.DATE(ImageAnalysis.dt)==datetime.today().date()).count()
+     
+    total_patient_count = Patients.query.count()
+    total_img_to_review = Images.query.join(ImageAnalysis, Images.image_id==ImageAnalysis.image_id).filter_by(verified=False).count()#.add_columns(users.userId, users.name, users.email, friends.userId, friendId).filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
+    total_img_today = Images.query.filter(func.DATE(Images.datetime)==datetime.today().date()).count()
+    total_img_analyzed = ImageAnalysis.query.filter(func.DATE(ImageAnalysis.dt)==datetime.today().date()).count()
+
+
+    db_info = {"current_user":{"patient_count":patient_count, "img_to_review":img_to_review, "img_today":img_today, "img_analyzed":img_analyzed},
+                "total":{"patient_count":total_patient_count, "img_to_review":total_img_to_review, "img_today":total_img_today, "img_analyzed":total_img_analyzed}}
+
+
+    return render_template("home.html", db_info=db_info, user=current_user)
 
 
 @app.route('/logout')
@@ -110,28 +118,28 @@ def sign_up():
 
 
 @app.route("/add_patient", methods=('GET', "POST"))
+@login_required
 def add_patient():
-    available_therapists_id, available_therapists_names = [t.id for t in Therapists.query.all()], [t.first_name + " " + t.last_name for t in Therapists.query.all()]
+    #available_therapists_id, available_therapists_names = [t.id for t in Therapists.query.all()], [t.first_name + " " + t.last_name for t in Therapists.query.all()]
     
     form = AddPatientForm()
-    form.therapist_id.choices = list(zip(available_therapists_id, available_therapists_names))
+    #form.therapist_id.choices = list(zip(available_therapists_id, available_therapists_names))
 
     if form.validate_on_submit():
-        #p = Patients.query.first()
-        patient = Patients(first_name=form.fname.data, last_name=form.lname.data, gender=form.gender.data, ssn=form.ssn.data, age=form.age.data, therapist_id=form.therapist_id.data)
+        patient = Patients(first_name=form.fname.data, last_name=form.lname.data, gender=form.gender.data, ssn=form.ssn.data, age=form.age.data, therapist_id=current_user.id)
         db.session.add(patient)
         db.session.commit()
         flash("New patient successfully added")
 
         return render_template("add_patient.html", form=form)
     return render_template("add_patient.html", form=form)
-    #return render_template("add_patient.html", form=form)
 
 
 @app.route("/upload_image",  methods=('GET', "POST"))
+@login_required
 def upload_image():
 
-    pid,pnames = [t.pid for t in Patients.query.all()], [str(t.first_name) + " " + str(t.last_name) for t in Patients.query.all()]
+    pid,pnames = [t.pid for t in Patients.query.filter_by(therapist_id=current_user.id).all()], [str(t.first_name) + " " + str(t.last_name) for t in Patients.query.filter_by(therapist_id=current_user.id).all()]
     imtypes_id,imtype_names = [t.id for t in ImageTypes.query.all()], [t.name for t in ImageTypes.query.all()]
 
     form = ImageForm()
@@ -170,6 +178,7 @@ def upload_image():
 
 
 @app.route("/patients",  methods=('GET', "POST"))
+@login_required
 def patients():
 
     form = PatientsForm()
@@ -208,6 +217,7 @@ def patients():
 
 
 @app.route("/images",  methods=('GET', "POST"))
+@login_required
 def images():
     sort = request.args.get('sort', 'image_id')
     direction = request.args.get('direction', 'asc')
@@ -215,10 +225,12 @@ def images():
     image_id = request.args.get('image_url', "")
 
 
-    #ignore the error when no image selected
     image_url = photos.url(request.args.get("image_url", ""))
     page = request.args.get('page', 1, type=int)
-    #add image view
+
+    #filter images by current user
+    filtered_images = Images.query.join(Patients, Patients.pid==Images.patient_id).join(Therapists, Patients.therapist_id==Therapists.id).filter_by(id=current_user.id)#.add_columns(Images.image_id)
+
 
 
     delete_id = request.args.get("delete_id", "")
@@ -259,37 +271,28 @@ def images():
                 db.session.commit()
                 
                 flash(f"Re-analyzed image with id {re_analyze_id}")
-
                 
         else:
             flash(f"Error {res.status_code}")
 
-
     if reverse:
-        iquery = Images.query.order_by(getattr(Images, sort).asc()).paginate(page, ITEMS_PER_PAGE, False)
+        iquery = filtered_images.order_by(getattr(Images, sort).asc()).paginate(page, ITEMS_PER_PAGE, False)
         i = iquery.items
     else:
-        iquery = Images.query.order_by(getattr(Images, sort).desc()).paginate(page, ITEMS_PER_PAGE, False)
+        iquery = filtered_images.order_by(getattr(Images, sort).desc()).paginate(page, ITEMS_PER_PAGE, False)
         i = iquery.items
     
-
     next_url = url_for('images', page=iquery.next_num, direction=direction, sort=sort) if iquery.has_next else None
     prev_url = url_for('images', page=iquery.prev_num, direction=direction, sort=sort) if iquery.has_prev else None
-
-
-    if image_id != "":
-        i = Images.query.filter_by(image_id=image_id)
-
 
     itable = ImagesTable(i,
                           sort_by=sort,
                           sort_reverse=reverse)
-    
-    #   ptable = PatientsTable(items=p)
-    
+        
     return render_template("images.html", table=itable, simage=image_url, next_url=next_url, prev_url=prev_url)
 
 @app.route("/image_analysis",  methods=('GET', "POST"))
+@login_required
 def image_analysis():
 
     sort = request.args.get('sort', 'image_id')
@@ -297,11 +300,13 @@ def image_analysis():
     reverse = (request.args.get('direction', 'asc') == 'desc')
 
 
-    #ignore the error when no image selected
+    # ignore the error when no image selected
     image_url = photos.url(request.args.get("image_url", ""))
     page = request.args.get('page', 1, type=int)
-    #add image view
+    # add image view
 
+    # filter images by current user
+    filtered_images = ImageAnalysis.query.join(Images, ImageAnalysis.image_id==Images.image_id).join(Patients, Patients.pid==Images.patient_id).join(Therapists, Patients.therapist_id == Therapists.id).filter_by(id=current_user.id)
 
     delete_id = request.args.get("delete_id", "")
     if request.method == "POST" and delete_id != "":
@@ -311,10 +316,10 @@ def image_analysis():
 
 
     if reverse:
-        iquery = ImageAnalysis.query.order_by(getattr(ImageAnalysis, sort).asc()).paginate(page, ITEMS_PER_PAGE, False)
+        iquery = filtered_images.order_by(getattr(ImageAnalysis, sort).asc()).paginate(page, ITEMS_PER_PAGE, False)
         i = iquery.items
     else:
-        iquery = ImageAnalysis.query.order_by(getattr(ImageAnalysis, sort).desc()).paginate(page, ITEMS_PER_PAGE, False)
+        iquery = filtered_images.order_by(getattr(ImageAnalysis, sort).desc()).paginate(page, ITEMS_PER_PAGE, False)
         i = iquery.items
     
 
@@ -326,12 +331,12 @@ def image_analysis():
     itable = ImageAnalysisTable(i,
                           sort_by=sort,
                           sort_reverse=reverse)
+        
     
-    #   ptable = PatientsTable(items=p)
-    print(image_url)
     return render_template("image_analysis.html", table=itable, simage=image_url, next_url=next_url, prev_url=prev_url)
 
 @app.route("/edit_analysis",  methods=["POST"])
+@login_required
 def edit_analysis():
     img_id = request.args.get("image_url", "")
 
@@ -340,8 +345,15 @@ def edit_analysis():
 
     img_analysis = ImageAnalysis.query.filter_by(image_id=img_id).first()
     
+    imtypes_id,imtype_names = [t.id for t in ImageTypes.query.all()], [t.name for t in ImageTypes.query.all()]
+
     form = EditImgAnalysisForm(img_id=img_id, tumor=img_analysis.tumor, diagnosis=img_analysis.diagnosis, recommendations=img_analysis.recommendations, confidence=img_analysis.confidence, verified=img_analysis.verified)
-    #form.tumor.default = img_analysis.tumor
+    
+
+    diagnosis_id,diagnosis_names = [t.id for t in TumorTypes.query.all()], [t.name for t in TumorTypes.query.all()]
+    form.diagnosis.choices = list(zip(diagnosis_id, diagnosis_names))
+
+
     if form.validate_on_submit():
         #return str(form.data)
         img_analysis.tumor = form.data["tumor"]
@@ -349,7 +361,7 @@ def edit_analysis():
         img_analysis.recommendations = form.data["recommendations"]
         img_analysis.confidence = form.data["confidence"]
         img_analysis.verified = form.data["verified"]
-        img_analysis.datetime = datetime.now()
+        img_analysis.dt = datetime.now()
 
         db.session.commit()
         return redirect(url_for('image_analysis'))

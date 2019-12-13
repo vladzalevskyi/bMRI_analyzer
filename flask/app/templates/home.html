@@ -1,9 +1,14 @@
 {% extends "base.html" %} {% block head %}
 <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
+
+
+
 <p>Welcome {{user.first_name}} {{user.last_name}} at the Home Page</p>
-<p>{{img_to_review}} images require review</p>
-<p>{{img_today}} images uploaded today</p>
-<p> {{img_analyzed}} images analyzed today</p>
+<p>{{db_info["current_user"]["patient_count"]}} patients under your care and {{db_info["total"]["patient_count"]}} total</p>
+<p>{{db_info["current_user"]["img_to_review"]}} images require your review and {{db_info["total"]["img_to_review"]}} total</p>
+<p>{{db_info["current_user"]["img_today"]}} images made by you today and {{db_info["total"]["img_today"]}} total</p>
+<p>{{db_info["current_user"]["img_analyzed"]}} images verified by you today and {{db_info["total"]["img_analyzed"]}} total</p>
+
 
 
 {% endblock %}

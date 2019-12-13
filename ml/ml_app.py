@@ -49,9 +49,10 @@ def predict():
         r = flask.request.get_json()
         impath =  r["impath"]
         impath = os.path.join(os.path.abspath("../uploads"), impath)
+        print(impath)
 
         image = Classification_Model.load_image(impath)
-        prediction = class_model.predict_image(image)
+        prediction, confidence = class_model.predict_image(image)
         result = {"classification": str(prediction)}
 
         img = Segmentation_Model.load_image(impath)
@@ -64,14 +65,13 @@ def predict():
         if segm["tumor_detected"] == False:
             result["segmentation_img"] = impath.split("/")[-1]
             result["tumor_detected"] = False
-            result["confidence"] = float(prediction[0])
+            result["confidence"] = float(confidence)
             print(segmentation_img.split("/")[-1], "*"*500)
 
         else:
             result["tumor_detected"] = True
-            result["confidence"] = float(prediction[0])
+            result["confidence"] = float(confidence)
             result["segmentation_img"] = segmentation_img.split("/")[-1]
-            print(segmentation_img.split("/")[-1], "*"*500)
 
         result["segmentation"] = str(segm["rois"])
 

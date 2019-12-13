@@ -31,10 +31,10 @@ class AddPatientForm(Form):
     fname = StringField("First Name", validators=[DataRequired(), Length(max=20)])
     lname = StringField("Last Name", validators=[DataRequired(), Length(max=20)])
 
-    ssn = StringField("SSN", validators=[Length(min=9, max=9)])
+    ssn = IntegerField("SSN")
     gender = SelectField("Patient's gender", choices=[("f", "female"), ("m", "male")])
-    age = IntegerField("Patient's age", validators=[NumberRange(min=0, max=200)])
-    therapist_id = SelectField(u'Select therapist', coerce=int, validators=[InputRequired()])
+    age = IntegerField("Patient's age")
+    #therapist_id = SelectField(u'Select therapist', coerce=int, validators=[InputRequired()])
 
     submit = SubmitField('Submit')
 
@@ -44,7 +44,7 @@ class AddPatientForm(Form):
     def validate_ssn(self, ssn):
         user = Patients.query.filter_by(ssn=ssn.data).first()
         if user is not None:
-            raise ValidationError('Patient with current ssn already exists')
+            raise ValidationError('Error adding new patient. Check that patient with current ssn already doesn\'t exists')
 
 
 class ImageForm(Form):
@@ -66,7 +66,7 @@ class PatientsForm(Form):
 class EditImgAnalysisForm(Form):
     img_id = HiddenField("Image id")
     tumor = StringField("Tumor analysis:")
-    diagnosis = StringField("Diagnosis:")
+    diagnosis = SelectField(u'Diagnosis', coerce=int, validators=[InputRequired()])
     recommendations = StringField("Recommendations")
     confidence = FloatField("Confidence")
     verified = BooleanField("Verified", default=True)

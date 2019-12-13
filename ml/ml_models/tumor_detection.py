@@ -89,9 +89,9 @@ class Classification_Model:
         """
         pred = self.model.predict(img)
         if pred[0][0] > 0.5:
-            return f"Tumor detected with a probability: {pred[0][0]}"
+            return f"Tumor detected with a probability: {pred[0][0]}", pred[0][0]
         else:
-            return f"NO tumors detected with a probability: {1- pred[0][0]}"
+            return f"NO tumors detected with a probability: {1- pred[0][0]}", 1- pred[0][0]
 
     def save_model(self, model_name):
         self.model.save(model_name)
