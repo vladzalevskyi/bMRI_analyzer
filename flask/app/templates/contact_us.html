@@ -1,51 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %} {% block content %} {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/login_style.css')}}"> {% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Brain MRI Analyzer</title>
-    <link rel="stylesheet" href="{{url_for( 'static', filename='styles/login_style.css')}}">
-    <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}">
+<div>
+    <h2>Feedback Form</h2>
+</div>
 
-</head>
+<form action="go/to/url" method="post">
 
-<body>
-    <article class='description'>
-        <header>
-
-            <div class='navbar'>
-                <nav>
-                    <a href="/" id="logoimage">
-                        <img src="{{url_for('static', filename='images/icon.png')}}" alt="icon">
-                    </a>
-                    <a href="/">About</a>
-                    <a href="/">Examples</a>
-                    <a href="/contact_us">Contact Us</a>
-
-                    <div id="login"><a href="/login">Log In</a></div>
-
-                </nav>
-
-            </div>
-
-        </header>
-
-        <div>
-            <h2>Feedback Form</h2>
-        </div>
-
-        <form action="go/to/url" method="post">
-
-            <div class="container">
-                <label for="uname"><b>Enter your full name</b>
+    <div class="container">
+        <label for="uname"><b>Enter your full name</b>
         <input type="text" placeholder="Name Surname" id="uname" required>
       </label>
-                <label for="feedb_text"><b>Your Feedback <br></b>
+        <label for="feedb_text"><b>Your Feedback <br></b>
         <textarea name="message" class="text" id="feedb_text"></textarea></label>
 
-                <label for="feedb_type"><b>Select the type of the Feedback<br></b>
+        <label for="feedb_type"><b>Select the type of the Feedback<br></b>
         <select name="feedback_type" id="feedb_type">
           <option value="Coplaint">Coplaint</option>
           <option value="Advise">Advise</option>
@@ -54,38 +23,25 @@
         </select></label>
 
 
-                <p><b>You gender</b></p>
-                <input type="radio" id="gender_male" name="gender_male" value="male">
-                <label for="gender_male">male</label>
+        <p><b>You gender</b></p>
+        <input type="radio" id="gender_male" name="gender_male" value="male">
+        <label for="gender_male">male</label>
 
-                <input type="radio" id="genger_female" name="genger_female" value="phone">
-                <label for="genger_female">female</label>
-
-
+        <input type="radio" id="genger_female" name="genger_female" value="phone">
+        <label for="genger_female">female</label>
 
 
-                <label for="vehicle_ch1"><b><br>Have you read the rules?<br></b>
+
+
+        <label for="vehicle_ch1"><b><br>Have you read the rules?<br></b>
         <input type="checkbox" name="vehicle1" value="Bike" id="vehicle_ch1"> I have read the rules<br></label>
 
 
 
-                <button type="submit">Submit</button>
-            </div>
+        <button type="submit">Submit</button>
+    </div>
 
 
-        </form>
+</form>
 
-
-
-        <footer>
-            <span class="footer-text">
-        <time datetime="2019-10-04 20:00">Created by: Vladyslav Zalevskyi.</time> Contact information: <a
-            href="mailto:vzalevskyi24@gmail.com">
-            vzalevskyi24@gmail.com</a>
-      </span>
-        </footer>
-
-    </article>
-</body>
-
-</html>
+{% endblock %}

@@ -1,24 +1,9 @@
-@import url("header.css");
 @import url("footer.css");
 @import url("mediaq.css");
-* {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
+
 
 .main-content {
     margin: 0 5%;
-}
-
-.description {
-    background-image: url("../images/background_im.png");
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-body {
-    margin: 0;
 }
 
 aside {

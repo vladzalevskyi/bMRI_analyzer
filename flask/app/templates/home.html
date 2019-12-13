@@ -1,33 +1,9 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>bMRI Home page</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-</head>
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
+<p>Welcome {{user.first_name}} {{user.last_name}} at the Home Page</p>
+<p>{{img_to_review}} images require review</p>
+<p>{{img_today}} images uploaded today</p>
+<p> {{img_analyzed}} images analyzed today</p>
 
 
-
-<body>
-    <p>Welcome {{user.first_name}} {{user.last_name}} at the Home Page</p>
-    <p>{{img_to_review}} images require review</p>
-    <p>{{img_today}} images uploaded today</p>
-    <p> {{img_analyzed}} images analyzed today</p>
-
-
-    <div>
-        Naviagtion:
-        <a href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
-        <a href="{{ url_for('login') }}">Login</a> {% else %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-        <a href="{{ url_for('upload_image') }}">Upload Image</a>
-        <a href="{{ url_for('patients') }}">My Patients</a>
-        <a href="{{ url_for('images') }}">Images</a>
-        <a href="{{ url_for('image_analysis') }}">Verify Images</a>
-        <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
-    </div>
-</body>
-
-</html>
+{% endblock %}

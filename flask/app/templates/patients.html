@@ -1,35 +1,9 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
+<form action="/patients" method="post">
 
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Patients</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    {{form.search_field.label}} {{form.search_field}} {{form.sort_by_ssn.label}} {{form.sort_by_ssn}} {{ form.csrf_token }} {{ form.submit }}
 
-</head>
+</form>
 
-<body>
-    <form action="/patients" method="post">
-
-        {{form.search_field.label}} {{form.search_field}} {{form.sort_by_ssn.label}} {{form.sort_by_ssn}} {{ form.csrf_token }} {{ form.submit }}
-
-    </form>
-
-    {{table}}
-
-
-    <div>
-        Naviagtion:
-        <a href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
-        <a href="{{ url_for('login') }}">Login</a> {% else %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-        <a href="{{ url_for('upload_image') }}">Upload Image</a>
-        <a href="{{ url_for('patients') }}">My Patients</a>
-        <a href="{{ url_for('images') }}">Images</a>
-        <a href="{{ url_for('image_analysis') }}">Verify Images</a>
-        <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
-    </div>
-</body>
-
-</html>
+{{table}} {% endblock %}

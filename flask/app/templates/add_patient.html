@@ -1,92 +1,67 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
+<div>
+    <h2>Add Patient</h2>
+</div>
 
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Add Patient</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-</head>
-
-<body>
-    <div>
-        <h2>Add Patient</h2>
-    </div>
-
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} {% endwith %}
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endwith %}
 
 
-    <form action="/add_patient" method="post">
+<form action="/add_patient" method="post">
 
-        <div class="container">{{ form.fname.label }} {{ form.fname }} {% if form.fname.errors %}
-            <ul class="errors">
-                {% for error in form.fname.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
-
-
-        <div class="container">{{ form.lname.label }} {{ form.lname }} {% if form.lname.errors %}
-            <ul class="errors">
-                {% for error in form.lname.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
+    <div class="container">{{ form.fname.label }} {{ form.fname }} {% if form.fname.errors %}
+        <ul class="errors">
+            {% for error in form.fname.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
 
 
-        <div class="container">{{form.gender.label}} {{form.gender}}</div>
+    <div class="container">{{ form.lname.label }} {{ form.lname }} {% if form.lname.errors %}
+        <ul class="errors">
+            {% for error in form.lname.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
 
 
-        <div class="container">{{ form.ssn.label }} {{ form.ssn }} {% if form.ssn.errors %}
-            <ul class="errors">
-                {% for error in form.ssn.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
+    <div class="container">{{form.gender.label}} {{form.gender}}</div>
 
 
-        <div class="container">{{ form.age.label }} {{ form.age }} {% if form.age.errors %}
-            <ul class="errors">
-                {% for error in form.age.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
+    <div class="container">{{ form.ssn.label }} {{ form.ssn }} {% if form.ssn.errors %}
+        <ul class="errors">
+            {% for error in form.ssn.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
 
 
-        <div class="container">{{form.therapist_id.label}} {{form.therapist_id}}</div>
+    <div class="container">{{ form.age.label }} {{ form.age }} {% if form.age.errors %}
+        <ul class="errors">
+            {% for error in form.age.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
+
+
+    <div class="container">{{form.therapist_id.label}} {{form.therapist_id}}</div>
 
 
 
-        {{ form.csrf_token }} {{ form.submit }}
+    {{ form.csrf_token }} {{ form.submit }}
 
 
 
 
-    </form>
-
-
-    <div>
-        Naviagtion:
-        <a href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
-        <a href="{{ url_for('login') }}">Login</a> {% else %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-        <a href="{{ url_for('upload_image') }}">Upload Image</a>
-        <a href="{{ url_for('patients') }}">My Patients</a>
-        <a href="{{ url_for('images') }}">Images</a>
-        <a href="{{ url_for('image_analysis') }}">Verify Images</a>
-        <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
-    </div>
-
-</body>
-
-</html>
+</form>
+{% endblock %}

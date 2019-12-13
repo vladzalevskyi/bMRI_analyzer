@@ -1,129 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}"> {% endblock %} {% block content %}
+<div class="main-content">
+    <aside>
+        <p>This website was developed as a part of a course work project</p>
+        <p>It can't be used for diagnostic use and should be considered only as a demonstration of the author's skills
+        </p>
+        <p>If you have any questions contact him on <a href="mailto:vzalevskyi24@gmail.com ">this email</a>
+        </p>
+    </aside>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Brain MRI Analyzer</title>
-    <link rel="stylesheet" href="{{url_for( 'static', filename='styles/style.css')}}">
-    <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}">
-    <script src="{{url_for('static', filename='scripts/lab.js')}}"></script>
+    <h2>Project Description</h2>
+    <b>How to analyze mri image</b>
+    <div class="description-list ">
+        <ul>
+            <li>Make an MRI scan</li>
+            <li>Convert it to png/jpg</li>
+            <li>Upload it to the website</li>
+            <li>Get the results
+                <ol type="i ">
+                    <li>Save them</li>
+                    <li>Save them again</li>
+                </ol>
+            </li>
+            <li>Enjoy the life
+                <ol type="i " start="3 ">
+                    <li>Drink a cup of Black tea</li>
+                    <li>Drink a cup of Green tea</li>
+                </ol>
+            </li>
+        </ul>
+    </div>
 
-    <article class='description' back>
-        <header>
-
-            <div class='navbar'>
-                <nav>
-                    <a href="" id="logoimage">
-                        <img src="{{url_for('static', filename='images/icon.png')}}" alt="icon">
-                    </a>
-                    <a href="/">About</a>
-                    <a href="/">Examples</a>
-                    <a href="/contact_us">Contact Us</a>
-
-                    <div id="login"><a href="/login">Log In</a></div>
-
-                </nav>
-
-        </header>
-
-
-        <div class="main-content ">
-            <aside>
-                <p>This website was developed as a part of a course work project</p>
-                <p>It can't be used for diagnostic use and should be considered only as a demonstration of the author's skills
-                </p>
-                <p>If you have any questions contact him on <a href="mailto:vzalevskyi24@gmail.com ">this email</a>
-                </p>
-            </aside>
-
-            <h2>Project Description</h2>
-            <b>How to analyze mri image</b>
-            <div class="description-list ">
-                <ul>
-                    <li>Make an MRI scan</li>
-                    <li>Convert it to png/jpg</li>
-                    <li>Upload it to the website</li>
-                    <li>Get the results
-                        <ol type="i ">
-                            <li>Save them</li>
-                            <li>Save them again</li>
-                        </ol>
-                    </li>
-                    <li>Enjoy the life
-                        <ol type="i " start="3 ">
-                            <li>Drink a cup of Black tea</li>
-                            <li>Drink a cup of Green tea</li>
-                        </ol>
-                    </li>
-                </ul>
-            </div>
-
-            <h3>Want to know how brain MRI looks?</h3>
-            <section>
-                <p><b>Firtsly, what is MRI?</b></p>
-                <p>Magnetic resonance imaging (MRI) is a test that uses powerful magnets, radio waves, and a computer to make detailed pictures inside your body.</p>
-            </section>
+    <h3>Want to know how brain MRI looks?</h3>
+    <section>
+        <p><b>Firtsly, what is MRI?</b></p>
+        <p>Magnetic resonance imaging (MRI) is a test that uses powerful magnets, radio waves, and a computer to make detailed pictures inside your body.</p>
+    </section>
 
 
-            <iframe src="http://www.youtube.com/embed/0LupvsT87Ec " width="560 " height="315 " allowfullscreen>
+    <iframe src="http://www.youtube.com/embed/0LupvsT87Ec " width="560 " height="315 " allowfullscreen>
                 </iframe>
 
 
-            <h2>Data used for the model traing</h2>
+    <h2>Data used for the model traing</h2>
 
-            <table>
-                <tr>
-                    <th>Name of the dataset</th>
-                    <th>Where got from</th>
-                    <th>Link</th>
-                </tr>
-
-
-                <tr>
-                    <td>Brain Tumor Images Dataset</td>
-                    <td>Kaggle</td>
-                    <td><a href="https://www.kaggle.com/simeondee/brain-tumor-images-dataset ">Link1</a></td>
-                </tr>
+    <table>
+        <tr>
+            <th>Name of the dataset</th>
+            <th>Where got from</th>
+            <th>Link</th>
+        </tr>
 
 
-                <tr>
-                    <td>New Brain Tumor Images Dataset</td>
-                    <td>Kaggle</td>
-                    <td><a href="https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection ">Link2</a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>Brain MRI Images for Brain Tumor Detection</td>
-                    <td>Kaggle</td>
-                    <td><a href="https://www.kaggle.com/simeondee/brain-tumor-images-dataset ">Link3</a></td>
-                </tr>
-                <tr>
-                    <td colspan="3 ">The end</td>
-                </tr>
-            </table>
+        <tr>
+            <td>Brain Tumor Images Dataset</td>
+            <td>Kaggle</td>
+            <td><a href="https://www.kaggle.com/simeondee/brain-tumor-images-dataset ">Link1</a></td>
+        </tr>
 
 
+        <tr>
+            <td>New Brain Tumor Images Dataset</td>
+            <td>Kaggle</td>
+            <td><a href="https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection ">Link2</a>
+            </td>
+        </tr>
 
-            <h4>The results look like</h4>
-            <div id="res ">
-                <figure>
-                    <img src="{{url_for('static', filename='images/result1.png')}}" alt="Trulli ">
-                    <figcaption>result1</figcaption>
-                </figure>
-            </div>
-        </div>
-        <footer>
-            <span class="footer-text ">
-                    <time datetime="2019-10-04 20:00 ">Created by: Vladyslav Zalevskyi.</time> Contact information: <a
-                        href="mailto:vzalevskyi24@gmail.com ">
-                        vzalevskyi24@gmail.com</a>
-                </span>
-        </footer>
+        <tr>
+            <td>Brain MRI Images for Brain Tumor Detection</td>
+            <td>Kaggle</td>
+            <td><a href="https://www.kaggle.com/simeondee/brain-tumor-images-dataset ">Link3</a></td>
+        </tr>
+        <tr>
+            <td colspan="3 ">The end</td>
+        </tr>
+    </table>
 
-    </article>
-    </main>
-
-</html>
+    <h4>The results look like</h4>
+    <div id="res ">
+        <figure>
+            <img src="{{url_for('static', filename='images/result1.png')}}" alt="Trulli ">
+            <figcaption>result1</figcaption>
+        </figure>
+    </div>
+</div>
+<footer>
+    <span class="footer-text ">
+                <time datetime="2019-10-04 20:00 ">Created by: Vladyslav Zalevskyi.</time> Contact information: <a
+                    href="mailto:vzalevskyi24@gmail.com ">
+                    vzalevskyi24@gmail.com</a>
+            </span>
+</footer>
+{% endblock %}

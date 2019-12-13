@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Brain MRI Analyzer</title>
+    <link rel="stylesheet" href="{{url_for( 'static', filename='styles/base.css')}}">
+    <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}"> {% block head %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        <div class='navbar'>
+            <div class="left_bar">
+                <a href="{{ url_for('home') }}" id="logoimage">
+                    <img class="logo" src="{{url_for('static', filename='images/icon.png')}}" alt="icon" width="50">
+                </a>
+                <a href="/">About</a>
+                <a href="/">Examples</a>
+                <a href="/contact_us">Contact Us</a>
+
+
+                <div id="loged_in_menu">
+                    {% if not current_user.is_anonymous %}
+                    <a href="{{ url_for('home') }}">Home</a>
+                    <a href="{{ url_for('upload_image') }}">Upload Image</a>
+                    <a href="{{ url_for('patients') }}">My Patients</a>
+                    <a href="{{ url_for('images') }}">Images</a>
+                    <a href="{{ url_for('image_analysis') }}">Verify Images</a>
+                    <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
+                </div>
+
+
+            </div>
+
+            <div id="login">
+                {% if current_user.is_anonymous %}
+                <a href="{{ url_for('login') }}">Login</a> {% else %}
+                <a href="{{ url_for('logout') }}">Logout</a> {% endif %}
+            </div>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>

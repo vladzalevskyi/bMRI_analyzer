@@ -1,90 +1,61 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
+<div>
+    <h2>Upload Image</h2>
+</div>
 
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Upload Image</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-</head>
-
-
-
-<body>
-    <div>
-        <h2>Upload Image</h2>
-    </div>
-
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} {% endwith %}
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endwith %}
 
 
-    <form action="/upload_image" method="post" enctype="multipart/form-data">
+<form action="/upload_image" method="post" enctype="multipart/form-data">
 
-        <div class="container">{{form.photo.label}} {{form.photo}} {% if form.photo.errors %}
-            <ul class="errors">
-                {% for error in form.photo.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
-
-
-        <div class="container">{{ form.patient_id.label }} {{ form.patient_id }} {% if form.patient_id.errors %}
-            <ul class="errors">
-                {% for error in form.patient_id.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
+    <div class="container">{{form.photo.label}} {{form.photo}} {% if form.photo.errors %}
+        <ul class="errors">
+            {% for error in form.photo.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
 
 
-        {{form.analyze.label}} {{form.analyze}}
-
-        <div class="container">{{ form.datetime.label }} {{ form.datetime }} {% if form.datetime.errors %}
-            <ul class="errors">
-                {% for error in form.datetime.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
-        <div class="container">{{ form.im_type.label }} {{ form.im_type }} {% if form.im_type.errors %}
-            <ul class="errors">
-                {% for error in form.im_type.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}</div>
+    <div class="container">{{ form.patient_id.label }} {{ form.patient_id }} {% if form.patient_id.errors %}
+        <ul class="errors">
+            {% for error in form.patient_id.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
 
 
-        {{ form.csrf_token }} {{ form.submit }}
+    {{form.analyze.label}} {{form.analyze}}
 
-    </form>
-
-
-
-    <div>
-        Naviagtion:
-        <a href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
-        <a href="{{ url_for('login') }}">Login</a> {% else %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-        <a href="{{ url_for('upload_image') }}">Upload Image</a>
-        <a href="{{ url_for('patients') }}">My Patients</a>
-        <a href="{{ url_for('images') }}">Images</a>
-        <a href="{{ url_for('image_analysis') }}">Verify Images</a>
-        <a href="{{ url_for('add_patient') }}">Add patient</a> {% endif %}
-    </div>
-
-    {% if file_url %}
-    <br>
-    <img src="{{ file_url }}"> {% endif %}
+    <div class="container">{{ form.datetime.label }} {{ form.datetime }} {% if form.datetime.errors %}
+        <ul class="errors">
+            {% for error in form.datetime.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
+    <div class="container">{{ form.im_type.label }} {{ form.im_type }} {% if form.im_type.errors %}
+        <ul class="errors">
+            {% for error in form.im_type.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}</div>
 
 
-</body>
+    {{ form.csrf_token }} {{ form.submit }}
 
-</html>
+</form>
+
+
+{% if file_url %}
+<br>
+<img src="{{ file_url }}"> {% endif %} {% endblock %}

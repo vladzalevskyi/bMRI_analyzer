@@ -1,47 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Brain MRI Analyzer</title>
+{% block head %}
     <link rel="stylesheet" href="{{url_for('static', filename='styles/login_style.css')}}">
-    <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}">
+{% endblock %}
 
-</head>
-
-<body>
+{% block content %}
     <article class='description'>
-        <header>
-
-            <div class='navbar'>
-                <nav>
-                    <a href="" id="logoimage">
-                        <img src="{{url_for('static', filename='images/icon.png')}}" alt="icon">
-                    </a>
-                    <a href="/">About</a>
-                    <a href="/">Examples</a>
-                    <a href="/contact_us">Contact Us</a>
-
-                    <div id="login">
-                        <a href="{{ url_for('index') }}">Home</a> {% if current_user.is_anonymous %}
-                        <a href="{{ url_for('login') }}">Login</a> {% else %}
-                        <a href="{{ url_for('logout') }}">Logout</a> {% endif %}
-                    </div>
-
-                </nav>
-
-            </div>
-
-        </header>
-
-        <div>
             <h2>Login Form</h2>
-        </div>
-
-
-
         <form action="/login" method="post">
             <div class="imgcontainer">
                 <img src="{{url_for('static', filename='images/login_icon.png')}}" alt="Avatar" class="avatar">
@@ -62,11 +27,6 @@
                 </ul>
                 {% endif %}</div>
 
-
-
-
-
-
             {% with messages = get_flashed_messages() %} {% if messages %}
             <ul class=flashes>
                 {% for message in messages %}
@@ -74,14 +34,7 @@
                 {% endfor %}
             </ul>
             {% endif %} {% endwith %} {{ form.csrf_token }} {{ form.submit }}
-
         </form>
-
-
-
-
-
-
 
         <div class="container">{{form.remember_me.label}} {{form.remember_me}} {% if form.remember_me.errors %}
             <ul class="errors">
@@ -90,9 +43,6 @@
                 {% endfor %}
             </ul>
             {% endif %}</div>
-
-
-
 
         </ul>
         <div class="forget-passw"><a href="/sign_up">Sign Up</a></div>
@@ -111,6 +61,4 @@
 
     </article>
 
-</body>
-
-</html>
+{% endblock %}
