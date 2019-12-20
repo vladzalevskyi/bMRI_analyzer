@@ -6,6 +6,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import skimage.draw
+from skimage.color import rgb2gray
 import tensorflow as tf
 from matplotlib import lines, patches
 from matplotlib.patches import Polygon
@@ -255,7 +256,7 @@ class Segmentation_Model:
 
 
     
-        mask = np.reshape(r['masks'], (1024, 1024))
+        mask = np.resize(r['masks'], (1024, 1024))
         y1, x1, y2, x2 = r['rois'][0]
         p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=4,
                               alpha=0.3, linestyle="dashed",
@@ -265,6 +266,7 @@ class Segmentation_Model:
 
 
         ax.add_patch(p)
+        #ax.imshow(rgb2gray(image))
         ax.imshow(image)
         ax.imshow(mask, cmap='jet', alpha=0.5)  # interpolation='none'
         if plot:        
