@@ -5,6 +5,16 @@
 
 body {
     margin: 0;
+    background-image: url("../images/background_im.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+main {
+    height: 100vh;
+    width: 1000px;
+    margin: auto;
 }
 
 .navbar {
@@ -33,7 +43,6 @@ body {
     justify-content: flex-start;
     display: flex;
     flex-flow: row nowrap;
-    align-self: center;
     background-color: #d3d3d3;
 }
 
@@ -58,11 +67,4 @@ body {
 .navbar a:hover {
     background: #ddd;
     color: black;
-}
-
-main {
-    background-image: url("../images/background_im.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }

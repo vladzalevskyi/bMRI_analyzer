@@ -9,7 +9,7 @@ class LoginForm(Form):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=19)])
     password = PasswordField('Password', validators=[DataRequired(), Length(max=19)])
     remember_me = BooleanField("Remember me")
-    submit = SubmitField('Submit')
+    submit = SubmitField('Log In')
 
 class SignUpForm(Form):
     title = SelectField(u'Select your title at the hospital', choices=[('nrs', 'nurse'), ('dr', 'Dr.')])
@@ -20,7 +20,7 @@ class SignUpForm(Form):
 
     fname = StringField("First Name", validators=[DataRequired(), Length(max=20)])
     lname = StringField("Last Name", validators=[DataRequired(), Length(max=20)])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
         user = Therapists.query.filter_by(username=username.data).first()
@@ -31,7 +31,7 @@ class AddPatientForm(Form):
     fname = StringField("First Name", validators=[DataRequired(), Length(max=20)])
     lname = StringField("Last Name", validators=[DataRequired(), Length(max=20)])
 
-    ssn = IntegerField("SSN")
+    ssn = StringField("SSN", validators=[Length(max=9)])
     gender = SelectField("Patient's gender", choices=[("f", "female"), ("m", "male")])
     age = IntegerField("Patient's age")
     #therapist_id = SelectField(u'Select therapist', coerce=int, validators=[InputRequired()])
@@ -50,7 +50,7 @@ class AddPatientForm(Form):
 class ImageForm(Form):
     photo = FileField(label="Select image", validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     patient_id = SelectField(u'Select patient', coerce=int, validators=[InputRequired()])
-    datetime = DateTimeField("Select datetime of uplodaded image. Default in now()", default=datetime.today)
+    datetime = DateTimeField("Select datetime of uplodaded image. Default is now()", default=datetime.today)
     im_type = SelectField(u'Select image type', coerce=int, validators=[InputRequired()])
     analyze = BooleanField("Send to analysis module")
     submit = SubmitField('Upload')
@@ -59,8 +59,8 @@ class ImageForm(Form):
 class PatientsForm(Form):
     # add validaion fields to be careful
     # quering data and puting it to url
-    search_field = StringField('Search', render_kw={"placeholder": "'Name Surname' OR SSN ('123456789')"})
-    sort_by_ssn = BooleanField("Search using ssn", default=False)
+    search_field = StringField('Search for Patients', render_kw={"placeholder": "'Name Surname' OR SSN ('123456789')"})
+    sort_by_ssn = BooleanField("using ssn", default=False)
     submit = SubmitField('Search')
 
 class EditImgAnalysisForm(Form):

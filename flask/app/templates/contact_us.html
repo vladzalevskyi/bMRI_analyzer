@@ -4,8 +4,14 @@
 <div>
     <h2>Feedback Form</h2>
 </div>
-
-<form action="go/to/url" method="post">
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul class=infos>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+<form action="{{url_for('contact_us')}}" method="post">
 
     <div class="container">
         <label for="uname"><b>Enter your full name</b>

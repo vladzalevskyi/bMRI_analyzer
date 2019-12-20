@@ -1,7 +1,13 @@
 form {
     display: flex;
     flex-flow: column nowrap;
-    text-align: center;
+    width: 60%;
+    background-color: #f2f2f2b3;
+    text-align: left;
+}
+
+main {
+    text-align: -webkit-center;
 }
 
 h1 {
@@ -9,10 +15,40 @@ h1 {
     font-size: 120%;
 }
 
+.sign-up-container {
+    padding: 1%;
+    margin-bottom: 0px;
+    align-self: center;
+}
+
 .container {
     padding: 1%;
+    margin-bottom: 0px;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 input[type="submit"] {
-    width: 10%;
+    background-color: rgba(93, 133, 94, 0.959);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    text-align: center;
+}
+
+.sign-up {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-bottom: 40px;
 }

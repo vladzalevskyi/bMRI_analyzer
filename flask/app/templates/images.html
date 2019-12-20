@@ -2,8 +2,9 @@
 <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
 
 
-<div align="left">{{table}}</div> {% if simage %}
+<div align="left">{{table}}</div>
 
-<div align="right"><img src="{{ simage }}" align="right"></div> {% endif %} {% if prev_url %}
+
+{% if prev_url %}
 <a href="{{ prev_url }}">Previous Page</a> {% endif %} {% if next_url %}
 <a href="{{ next_url }}">Next Page</a> {% endif %} {% endblock %}

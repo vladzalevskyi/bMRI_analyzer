@@ -1,9 +1,16 @@
 {% extends "base.html" %} {% block head %}
 <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
-<form action="/patients" method="post">
+<div class="wrap">
+    <form action="/patients" method="post">
 
-    {{form.search_field.label}} {{form.search_field}} {{form.sort_by_ssn.label}} {{form.sort_by_ssn}} {{ form.csrf_token }} {{ form.submit }}
+        <div class="container">
+            <p><b>{{form.search_field.label}}</b></p> {{form.search_field}}</div>
+        <div class="container"> {{form.sort_by_ssn.label}} {{form.sort_by_ssn}}</div>
+        {{ form.csrf_token }} {{ form.submit }}
 
-</form>
+    </form>
 
-{{table}} {% endblock %}
+    {{table}}
+</div>
+
+{% endblock %}

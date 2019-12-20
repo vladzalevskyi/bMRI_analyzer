@@ -1,40 +1,36 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/login_style.css')}}"> {% endblock %} {% block content %}
+<article class='description'>
+    <h2>Login Form</h2>
+    <form action="/login" method="post">
+        <div class="imgcontainer">
+            <img src="{{url_for('static', filename='images/login_icon.png')}}" alt="Avatar" class="avatar">
+        </div>
 
-{% block head %}
-    <link rel="stylesheet" href="{{url_for('static', filename='styles/login_style.css')}}">
-{% endblock %}
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
 
-{% block content %}
-    <article class='description'>
-            <h2>Login Form</h2>
-        <form action="/login" method="post">
-            <div class="imgcontainer">
-                <img src="{{url_for('static', filename='images/login_icon.png')}}" alt="Avatar" class="avatar">
-            </div>
-
-            <div class="container">{{ form.username.label }} {{ form.username }} {% if form.username.errors %}
-                <ul class="errors">
-                    {% for error in form.username.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}</div>
-            <div class="container">{{ form.password.label }} {{ form.password }} {% if form.password.errors %}
-                <ul class="errors">
-                    {% for error in form.password.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}</div>
-
-            {% with messages = get_flashed_messages() %} {% if messages %}
-            <ul class=flashes>
-                {% for message in messages %}
-                <li>{{ message }}</li>
+        <div class="container">{{ form.username.label }} {{ form.username }} {% if form.username.errors %}
+            <ul class="errors">
+                {% for error in form.username.errors %}
+                <li>{{ error }}</li>
                 {% endfor %}
             </ul>
-            {% endif %} {% endwith %} {{ form.csrf_token }} {{ form.submit }}
-        </form>
+            {% endif %}</div>
+        <div class="container">{{ form.password.label }} {{ form.password }} {% if form.password.errors %}
+            <ul class="errors">
+                {% for error in form.password.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}</div>
+
+
 
         <div class="container">{{form.remember_me.label}} {{form.remember_me}} {% if form.remember_me.errors %}
             <ul class="errors">
@@ -43,22 +39,15 @@
                 {% endfor %}
             </ul>
             {% endif %}</div>
-
-        </ul>
-        <div class="forget-passw"><a href="/sign_up">Sign Up</a></div>
+        {{ form.csrf_token }}
+        <div id="login-submit">{{ form.submit }}</div>
+        <div class="container-sign-up"><a href="/sign_up" class="sign-up"><i> New to us? Sign Up</i></a></div>
         </div>
 
-        <div class="forget-passw"><a href="*">Forgot password?</a></div>
-        </div>
 
-        <footer>
-            <span class="footer-text">
-            <time datetime="2019-10-04 20:00">Created by: Vladyslav Zalevskyi.</time> Contact information: <a
-                href="mailto:vzalevskyi24@gmail.com">
-                vzalevskyi24@gmail.com</a>
-          </span>
-        </footer>
+    </form>
 
-    </article>
+
+</article>
 
 {% endblock %}

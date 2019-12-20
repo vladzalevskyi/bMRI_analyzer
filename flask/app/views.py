@@ -63,8 +63,11 @@ def login():
 
 
 
-@app.route("/contact_us")
+@app.route("/contact_us", methods=("GET", "POST"))
 def contact_us():
+    if request.method == "POST":
+        flash("We've recieved your message. Thank you!")
+        
     return render_template("contact_us.html")
 
 @app.route("/home")
@@ -209,7 +212,8 @@ def patients():
 
     ptable = PatientsTable(p,
                           sort_by=sort,
-                          sort_reverse=reverse)
+                          sort_reverse=reverse,
+                          html_attrs={"class":"patients-table"})
     
     #   ptable = PatientsTable(items=p)
 
@@ -287,8 +291,8 @@ def images():
 
     itable = ImagesTable(i,
                           sort_by=sort,
-                          sort_reverse=reverse)
-        
+                          sort_reverse=reverse, html_attrs={"class":"image-table"})
+    #return str(itable.image.get_attr_list)
     return render_template("images.html", table=itable, simage=image_url, next_url=next_url, prev_url=prev_url)
 
 @app.route("/image_analysis",  methods=('GET', "POST"))
@@ -366,3 +370,10 @@ def edit_analysis():
         db.session.commit()
         return redirect(url_for('image_analysis'))
     return render_template("edit_analysis.html", form=form, img_id=img_id)
+
+
+@app.route("/show_image")
+@login_required
+def show_image():
+    img = photos.url(request.args.get("image_url", ""))
+    return render_template("show_image.html", img=img)

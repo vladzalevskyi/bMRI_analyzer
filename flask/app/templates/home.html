@@ -1,14 +1,19 @@
 {% extends "base.html" %} {% block head %}
-<link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}"> {% endblock %} {% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/home.css')}}"> {% endblock %} {% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}">
 
 
-
-<p>Welcome {{user.first_name}} {{user.last_name}} at the Home Page</p>
-<p>{{db_info["current_user"]["patient_count"]}} patients under your care and {{db_info["total"]["patient_count"]}} total</p>
-<p>{{db_info["current_user"]["img_to_review"]}} images require your review and {{db_info["total"]["img_to_review"]}} total</p>
-<p>{{db_info["current_user"]["img_today"]}} images made by you today and {{db_info["total"]["img_today"]}} total</p>
-<p>{{db_info["current_user"]["img_analyzed"]}} images verified by you today and {{db_info["total"]["img_analyzed"]}} total</p>
-
+<div class="info-message">
+    <h1> <b>You've loged in as {{user.first_name}} {{user.last_name}}. Welcome at a Home Page</b></h1>
+    <h3>Current statistics:</h3>
+    <ul>
+        <li>{{db_info["current_user"]["patient_count"]}} patients under your care and {{db_info["total"]["patient_count"]}} total</li>
+        <li>{{db_info["current_user"]["img_to_review"]}} images require your review and {{db_info["total"]["img_to_review"]}} total
+            <lip>
+                <li>{{db_info["current_user"]["img_today"]}} images made by you today and {{db_info["total"]["img_today"]}} total</li>
+                <li>{{db_info["current_user"]["img_analyzed"]}} images verified by you today and {{db_info["total"]["img_analyzed"]}} total</p>
+    </ul>
+</div>
 
 
 {% endblock %}

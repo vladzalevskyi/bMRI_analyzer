@@ -1,0 +1,11 @@
+li {
+    list-style-position: inside;
+    margin: 20px;
+}
+
+.info-message {
+    text-align: center;
+    margin: 10%;
+    border: 3px solid #f1f1f1;
+    background-color: #f2f2f2b3;
+}

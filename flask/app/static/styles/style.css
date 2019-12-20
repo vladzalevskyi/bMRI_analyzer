@@ -1,9 +1,61 @@
 @import url("footer.css");
 @import url("mediaq.css");
-
-
 .main-content {
     margin: 0 5%;
+}
+
+h2 {
+    font-size: larger;
+}
+
+form {
+    margin-top: 2%;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.errors {
+    display: block;
+    color: white;
+    background-color: rgb(255, 129, 129);
+    margin: 0;
+    list-style-type: none;
+}
+
+ul {
+    font-size: 80%;
+    margin: 0;
+}
+
+.sign-up {
+    color: rgb(46, 44, 44);
+    padding: 20px;
+}
+
+.flashes {
+    display: block;
+    color: white;
+    background-color: rgba(255, 129, 129, 0.705);
+    list-style-type: none;
+}
+
+.infos {
+    display: block;
+    color: white;
+    background-color: rgba(114, 168, 126, 0.829);
+    list-style-type: none;
+    text-align: center;
+}
+
+article {
+    text-align: -webkit-center;
+}
+
+.search,
+.sort {
+    display: flex;
+    font-size: 120%;
+    margin: 1%;
 }
 
 aside {
@@ -19,20 +71,40 @@ h2 {
     margin-top: 50px;
 }
 
+a {
+    color: white;
+    text-decoration: none;
+}
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
+    margin-top: 5%;
+    width: max-content;
 }
 
-td,
+tr:hover {
+    background-color: #ddd;
+}
+
 th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: rgb(128, 128, 128);
+    color: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-bottom: none;
+}
+
+td {
     border: 1px solid #dddddd;
-    text-align: left;
     padding: 8px;
 }
 
 tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: #f2f2f2;
 }
 
 #res {
@@ -42,4 +114,165 @@ tr:nth-child(even) {
 
 figure figcaption {
     text-align: left;
+}
+
+.wrap {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+}
+
+form {
+    border: 3px solid #f1f1f1;
+    background-color: #f2f2f2b3;
+}
+
+.container {
+    margin: 2px;
+}
+
+#search_field {
+    width: 60%;
+}
+
+#submit {
+    align-self: center;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.patients-table {
+    width: 90%;
+}
+
+td a {
+    color: black;
+}
+
+
+/* Style the Image Used to Trigger the Modal */
+
+#myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#myImg:hover {
+    opacity: 0.7;
+}
+
+
+/* The Modal (background) */
+
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Black w/ opacity */
+}
+
+
+/* Modal Content (Image) */
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+
+/* Add Animation - Zoom in the Modal */
+
+.modal-content,
+#caption {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0)
+    }
+    to {
+        transform: scale(1)
+    }
+}
+
+
+/* The Close Button */
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* 100% Image Width on Smaller Screens */
+
+@media only screen and (max-width: 700px) {
+    .modal-content {
+        width: 100%;
+    }
+}
+
+.dbutton button {
+    background-color: rgba(172, 92, 92, 0.952);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.reanalyze-button button {
+    background-color: rgba(73, 60, 133, 0.863);
+    color: white;
+    border: none;
+    cursor: pointer;
 }

@@ -1,0 +1,16 @@
+main {
+    width: 100%;
+    max-inline-size: max-content;
+}
+
+h1 {
+    text-align: center;
+    padding-top: 10px;
+}
+
+.change-button button {
+    background-color: rgba(41, 199, 165, 0.863);
+    color: white;
+    border: none;
+    cursor: pointer;
+}

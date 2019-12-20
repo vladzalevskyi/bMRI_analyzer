@@ -56,9 +56,9 @@ class ImagesTable(Table):
     patient_id = PatientCol('Patient')
     datetime = Col('Datetime')
     im_type = ImTypeCol("Image Type")
-    image = LinkCol("Image Location", endpoint="images", url_kwargs=dict(image_url='image'), attr='image')
-    delete = ButtonCol("Delete", endpoint="images" ,url_kwargs=dict(delete_id='image_id'), allow_sort=False)
-    re_analyze = ButtonCol("Re analyze image", endpoint="images" ,url_kwargs=dict(analyze_id='image_id'), allow_sort=False)
+    image = LinkCol("Image Location", endpoint="show_image", url_kwargs=dict(image_url='image'), attr='image')
+    delete = ButtonCol("Delete", endpoint="images" ,url_kwargs=dict(delete_id='image_id'), allow_sort=False, td_html_attrs={"class":"dbutton"})
+    re_analyze = ButtonCol("Re analyze image", endpoint="images" ,url_kwargs=dict(analyze_id='image_id'), allow_sort=False, td_html_attrs={"class":"reanalyze-button"})
     allow_sort= True
 
     def sort_url(self, col_key, reverse=False):
@@ -71,7 +71,7 @@ class ImagesTable(Table):
 
 class ImageAnalysisTable(Table):
     image_id = LinkCol("Image id", endpoint="image_analysis", url_kwargs=dict(image_url='image_id'), attr='image_id')
-    segment = LinkCol("Segmentation", endpoint="image_analysis", url_kwargs=dict(image_url='segment'), attr='image_id')
+    segment = LinkCol("Segmentation", endpoint="show_image", url_kwargs=dict(image_url='segment'), attr='image_id')
     tumor = Col('Tumor Analysis')
     diagnosis = Diagnosis("Tumor Type")
     confidence = Col("Confidence") #LinkCol("Image Location", endpoint="images", url_kwargs=dict(image_url='image'), attr='image')
@@ -79,8 +79,8 @@ class ImageAnalysisTable(Table):
     recommendations = Col("Recommendations")
 
     verified = BoolCol("Verified")
-    change = ButtonCol("Change Image analysis", endpoint="edit_analysis" ,url_kwargs=dict(image_url='image_id'))
-    delete = ButtonCol("Delete", endpoint="image_analysis" ,url_kwargs=dict(delete_id='image_id'), allow_sort=False)
+    change = ButtonCol("Change Image analysis", endpoint="edit_analysis" ,url_kwargs=dict(image_url='image_id'), td_html_attrs={"class":"change-button"})
+    delete = ButtonCol("Delete", endpoint="image_analysis" ,url_kwargs=dict(delete_id='image_id'), allow_sort=False, td_html_attrs={"class":"dbutton"})
 
     allow_sort= True
 
