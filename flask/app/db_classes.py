@@ -7,8 +7,8 @@ from app import app
 from app import login
 db = SQLAlchemy(app)
 
-
-db.Model.metadata.reflect(bind=db.engine, schema='coursework_db')
+db_name = "bMRI_db"
+db.Model.metadata.reflect(bind=db.engine, schema=f'{db_name}')
 from flask_login import UserMixin
 
 @login.user_loader
@@ -20,7 +20,7 @@ def load_user(id):
 
 class Therapists(UserMixin, db.Model):
     '''deal with an existing table'''
-    __table__ = db.Model.metadata.tables['coursework_db.therapists']
+    __table__ = db.Model.metadata.tables[f'{db_name}.therapists']
     
 
     def __str__(self):
@@ -39,7 +39,7 @@ class Therapists(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 class Patients(db.Model):
-    __table__ = db.Model.metadata.tables["coursework_db.patient_info"]
+    __table__ = db.Model.metadata.tables[f"{db_name}.patient_info"]
     
     fullname = column_property(__table__.columns.first_name + " " + __table__.columns.last_name)
 
@@ -51,7 +51,7 @@ class Patients(db.Model):
 
 
 class Images(db.Model):
-    __table__ = db.Model.metadata.tables["coursework_db.images"]
+    __table__ = db.Model.metadata.tables[f"{db_name}.images"]
 
     def __str__(self):
         return str({"image_id": self.image_id, "patient_id": self.patient_id, "datetime": self.datetime, "im_type": self.im_type, "image": self.image})
@@ -61,7 +61,7 @@ class Images(db.Model):
 
 
 class ImageAnalysis(db.Model):
-    __table__ = db.Model.metadata.tables["coursework_db.image_analysis"]
+    __table__ = db.Model.metadata.tables[f"{db_name}.image_analysis"]
 
     def __str__(self):
         return str({"image_id": self.image_id, "segment": self.segment, "tumor": self.tumor, "diagnosis": self.diagnosis, "recommendations": self.recommendations, "confidence": self.confidence, "datetime": self.dt, "verified": self.verified})
@@ -71,7 +71,7 @@ class ImageAnalysis(db.Model):
 
 
 class ImageTypes(db.Model):
-    __table__ = db.Model.metadata.tables["coursework_db.image_types"]
+    __table__ = db.Model.metadata.tables[f"{db_name}.image_types"]
 
     def __str__(self):
         return str({"id": self.id, "name": self.name})
@@ -81,7 +81,7 @@ class ImageTypes(db.Model):
 
 
 class TumorTypes(db.Model):
-    __table__ = db.Model.metadata.tables["coursework_db.tumor_types"]
+    __table__ = db.Model.metadata.tables[f"{db_name}.tumor_types"]
 
     def __str__(self):
         return str({"id": self.id, "name": self.name, "descr": self.descr})

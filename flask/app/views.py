@@ -27,7 +27,7 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 DOCKER = 'mlapp'
 LOCAL = '0.0.0.0'
-ML_URL =f'http://{DOCKER}:5002/api/detect'
+ML_URL =f'http://{LOCAL}:5002/api/detect'
 ITEMS_PER_PAGE = 5
 
 
@@ -113,7 +113,7 @@ def sign_up():
     if form.validate_on_submit():
         
         #wrap in tre/except
-        new_therapist = Therapists(first_name=form.fname.data, last_name=form.lname.data, username=form.username.data, password=form.password.data, title=form.title.data)
+        new_therapist = Therapists(first_name=form.fname.data, last_name=form.lname.data, username=form.username.data, title=form.title.data)
         new_therapist.set_password(form.password.data)
         db.session.add(new_therapist)
         db.session.commit()
