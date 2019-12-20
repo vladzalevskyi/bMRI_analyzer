@@ -27,7 +27,7 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 DOCKER = 'mlapp'
 LOCAL = '0.0.0.0'
-ML_URL =f'http://{DOCKER}:5002/api/detect'
+ML_URL =f'http://{LOCAL}:5002/api/detect'
 ITEMS_PER_PAGE = 5
 
 
@@ -341,7 +341,7 @@ def image_analysis():
     
     return render_template("image_analysis.html", table=itable, simage=image_url, next_url=next_url, prev_url=prev_url)
 
-@app.route("/edit_analysis",  methods=["POST"])
+@app.route("/edit_analysis",  methods=["GET","POST"])
 @login_required
 def edit_analysis():
     if current_user.title != "Dr.":

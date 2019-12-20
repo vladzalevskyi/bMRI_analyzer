@@ -1,10 +1,10 @@
 {% extends "base.html" %} {% block head %}
-<link rel="stylesheet" href="{{url_for('static', filename='styles/sign_up.css')}}">"
+<link rel="stylesheet" href="{{url_for('static', filename='styles/sign_up.css')}}">
 <link rel=" stylesheet " href="{{url_for( 'static', filename='styles/style.css' )}} "> {% endblock %} {% block content %}
 
 <h2>You are editing image with image_id={{img_id}}. Current values are displayed in the fields below. To change them, edit the fields and press 'Save changes'</h2>
 
-<form action="/edit_analysis " method="post " data-img_id={{img_id}}>
+<form action="/edit_analysis" method="post">
     {{form.img_id}}
 
     <div class="container ">{{ form.tumor.label }} {{ form.tumor }} {% if form.tumor.errors %}
