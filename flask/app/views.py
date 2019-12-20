@@ -27,7 +27,7 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 DOCKER = 'mlapp'
 LOCAL = '0.0.0.0'
-ML_URL =f'http://{LOCAL}:5002/api/detect'
+ML_URL =f'http://{DOCKER}:5002/api/detect'
 ITEMS_PER_PAGE = 5
 
 
@@ -344,34 +344,37 @@ def image_analysis():
 @app.route("/edit_analysis",  methods=["POST"])
 @login_required
 def edit_analysis():
-    img_id = request.args.get("image_url", "")
+    if current_user.title != "Dr.":
+        flash("You have no rights to edit analysis!")
+        return redirect(url_for("image_analysis"))
+    else:
+        img_id = request.args.get("image_url", "")
 
-    if img_id == "":
-        img_id = request.form["img_id"]
+        if img_id == "":
+            img_id = request.form["img_id"]
 
-    img_analysis = ImageAnalysis.query.filter_by(image_id=img_id).first()
-    
-    imtypes_id,imtype_names = [t.id for t in ImageTypes.query.all()], [t.name for t in ImageTypes.query.all()]
+        img_analysis = ImageAnalysis.query.filter_by(image_id=img_id).first()
+        
+        imtypes_id,imtype_names = [t.id for t in ImageTypes.query.all()], [t.name for t in ImageTypes.query.all()]
 
-    form = EditImgAnalysisForm(img_id=img_id, tumor=img_analysis.tumor, diagnosis=img_analysis.diagnosis, recommendations=img_analysis.recommendations, confidence=img_analysis.confidence, verified=img_analysis.verified)
-    
+        form = EditImgAnalysisForm(img_id=img_id, tumor=img_analysis.tumor, diagnosis=img_analysis.diagnosis, recommendations=img_analysis.recommendations, confidence=img_analysis.confidence, verified=img_analysis.verified)
+        
 
-    diagnosis_id,diagnosis_names = [t.id for t in TumorTypes.query.all()], [t.name for t in TumorTypes.query.all()]
-    form.diagnosis.choices = list(zip(diagnosis_id, diagnosis_names))
+        diagnosis_id,diagnosis_names = [t.id for t in TumorTypes.query.all()], [t.name for t in TumorTypes.query.all()]
+        form.diagnosis.choices = list(zip(diagnosis_id, diagnosis_names))
 
 
-    if form.validate_on_submit():
-        #return str(form.data)
-        img_analysis.tumor = form.data["tumor"]
-        img_analysis.diagnosis = form.data["diagnosis"]
-        img_analysis.recommendations = form.data["recommendations"]
-        img_analysis.confidence = form.data["confidence"]
-        img_analysis.verified = form.data["verified"]
-        img_analysis.dt = datetime.now()
+        if form.validate_on_submit():
+            img_analysis.tumor = form.data["tumor"]
+            img_analysis.diagnosis = form.data["diagnosis"]
+            img_analysis.recommendations = form.data["recommendations"]
+            img_analysis.confidence = form.data["confidence"]
+            img_analysis.verified = form.data["verified"]
+            img_analysis.dt = datetime.now()
 
-        db.session.commit()
-        return redirect(url_for('image_analysis'))
-    return render_template("edit_analysis.html", form=form, img_id=img_id)
+            db.session.commit()
+            return redirect(url_for('image_analysis'))
+        return render_template("edit_analysis.html", form=form, img_id=img_id)
 
 
 @app.route("/show_image")
