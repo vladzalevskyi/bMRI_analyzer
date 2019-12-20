@@ -11,6 +11,8 @@ services:
       
     expose:
       - 8080
+    volumes: 
+      - ./uploads:/uploads
 
   nginx:
     build: ./nginx
@@ -18,3 +20,9 @@ services:
     
     ports:
       - "80:80"
+
+  mlapp:
+    build: ./ml
+    container_name: mlapp
+    volumes: 
+      - ./uploads:/uploads

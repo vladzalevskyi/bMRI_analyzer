@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(os.path.abspath(".."), 'uploads') # you'll need to create a folder named uploads
 
-os.makedirs(app.config['UPLOADED_PHOTOS_DEST'], exist_ok=True)
+#os.makedirs(app.config['UPLOADED_PHOTOS_DEST'], exist_ok=True)
 
 login = LoginManager(app)
 login.login_view = 'login'

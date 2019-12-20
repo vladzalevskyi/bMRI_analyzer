@@ -9,6 +9,7 @@ RUN pip install --upgrade numpy
 
 RUN pip install -r requirements.txt
 
-EXPOSE 5000
+VOLUME ["/uploads"]
+EXPOSE 5002
 
 CMD ["python", "ml_app.py"]

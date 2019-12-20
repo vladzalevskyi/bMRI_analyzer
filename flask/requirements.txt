@@ -11,3 +11,6 @@ Flask-SQLAlchemy
 SQLAlchemy
 flask-login
 mysqlclient
+requests
+Flask-Uploads
+flask-table

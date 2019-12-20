@@ -71,7 +71,7 @@ class ImagesTable(Table):
 
 class ImageAnalysisTable(Table):
     image_id = LinkCol("Image id", endpoint="image_analysis", url_kwargs=dict(image_url='image_id'), attr='image_id')
-    segment = LinkCol("Segmentation", endpoint="show_image", url_kwargs=dict(image_url='segment'), attr='image_id')
+    segment = LinkCol("Segmentation", endpoint="show_image", url_kwargs=dict(image_url='segment'), allow_sort=False)
     tumor = Col('Tumor Analysis')
     diagnosis = Diagnosis("Tumor Type")
     confidence = Col("Confidence") #LinkCol("Image Location", endpoint="images", url_kwargs=dict(image_url='image'), attr='image')

@@ -25,7 +25,9 @@ configure_uploads(app, photos)
 patch_request_class(app)  # set maximum file size, default is 16MB
 
 
-ML_URL = 'http://0.0.0.0:5002/api/detect'
+DOCKER = 'mlapp'
+LOCAL = '0.0.0.0'
+ML_URL =f'http://{DOCKER}:5002/api/detect'
 ITEMS_PER_PAGE = 5
 
 
