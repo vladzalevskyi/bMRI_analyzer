@@ -27,7 +27,7 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 DOCKER = 'mlapp'
 LOCAL = '0.0.0.0'
-ML_URL =f'http://{LOCAL}:5002/api/detect'
+ML_URL =f'http://{DOCKER}:5002/api/detect'
 ITEMS_PER_PAGE = 5
 
 

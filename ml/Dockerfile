@@ -6,10 +6,10 @@ ADD . /ml_models
 
 RUN pip install --upgrade cython
 RUN pip install --upgrade numpy
-
+RUN pip install fastapi uvicorn
 RUN pip install -r requirements.txt
 
 VOLUME ["/uploads"]
 EXPOSE 5002
 
-CMD ["python", "ml_app.py"]
+CMD ["uvicorn", "ml_app_fastapi:app", "--reload", "--host",  "0.0.0.0", "--port" , "5002"]
