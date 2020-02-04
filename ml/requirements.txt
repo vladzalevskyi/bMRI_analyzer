@@ -12,4 +12,3 @@ h5py==2.9.0
 ipython==7.10.1
 scikit_learn==0.21.3
 pydantic
-fastapi

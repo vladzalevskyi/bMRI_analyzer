@@ -13,7 +13,9 @@ services:
       - 8080
     volumes: 
       - ./uploads:/uploads
-
+    depends_on:
+      - mysql_db
+      - mlapp
   nginx:
     build: ./nginx
     container_name: nginx
@@ -26,3 +28,28 @@ services:
     container_name: mlapp
     volumes: 
       - ./uploads:/uploads
+
+  mysql_db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'bMRI_db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3307:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3307'
+      # Where our data will be persisted
+    # command: --init-file /data/application/init.sql
+    volumes:
+        - ./init:/docker-entrypoint-initdb.d
+        - my-datavolume:/var/lib/mysql
+volumes:
+  my-datavolume:

@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 VOLUME ["/uploads"]
 EXPOSE 5002
 
-CMD ["uvicorn", "ml_app_fastapi:app", "--reload", "--host",  "0.0.0.0", "--port" , "5002"]
+CMD ["uvicorn", "ml_app:app", "--reload", "--host",  "0.0.0.0", "--port" , "5002"]

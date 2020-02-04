@@ -7,8 +7,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hoooray!'
 LOCAL_IP = "10.35.2.26"
 GLOBAL_IP = "zanner.org.ua"
+DOCKER_IP = "mysql_db"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://ka7605:123456@{GLOBAL_IP}:33321/bMRI_db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://ka7605:123456@{GLOBAL_IP}:33321/bMRI_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://user:password@{DOCKER_IP}:3306/bMRI_db'
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
